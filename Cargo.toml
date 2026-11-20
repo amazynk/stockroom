@@ -56,7 +56,7 @@ slint = { version = "1.18.1", default-features = false, features = ["std", "comp
 slint-build = "1.18.1"
 # The system language, as Slint itself reads it.
 sys-locale = "0.3.2"
-sysinfo = { version = "0.39.6", default-features = false, features = ["system"] }
+sysinfo = { version = "0.40.4", default-features = false, features = ["system"] }
 tar = { version = "0.4.46", default-features = false }
 tempfile = "3.27.0"
 thiserror = "2.0.21"
