@@ -1,0 +1,518 @@
+// Hand-drawn controls shared by both windows, in the catalogue's manner: square, ruled,
+// ink on paper. Every one has a role, a label and a default action for screen readers, and
+// takes Tab, Space and Enter.
+
+import { Theme } from "theme.slint";
+import { Focus } from "focus.slint";
+
+export enum Tone { normal, muted, ok, warn, bad, accent }
+
+export global Ui {
+    pure public function tone(t: Tone) -> color {
+        if t == Tone.ok { return Theme.ok; }
+        if t == Tone.warn { return Theme.warn; }
+        if t == Tone.bad { return Theme.bad; }
+        if t == Tone.muted { return Theme.muted; }
+        if t == Tone.accent { return Theme.accent; }
+        return Theme.soft-text;
+    }
+}
+
+// 24-unit SVG path icon.
+export component Icon inherits Path {
+    in property <color> color: Theme.soft-text;
+    width: 16px;
+    height: 16px;
+    viewbox-width: 24;
+    viewbox-height: 24;
+    stroke: color;
+    stroke-width: 1.8px;
+    fill: transparent;
+}
+
+export global Icons {
+    out property <string> back: "M21 12H4 M10 6l-6 6 6 6";
+    out property <string> arrow: "M3 12h17 M14 6l6 6-6 6";
+    out property <string> refresh: "M20 11a8 8 0 1 0-2.3 5.7 M20 4v7h-7";
+    out property <string> close: "M6 6l12 12 M18 6L6 18";
+    out property <string> check: "M5 12l5 5 9-10";
+    out property <string> warn: "M12 4l9 16H3z M12 10v4 M12 17v0.5";
+    out property <string> down: "M12 4v12 M6 11l6 6 6-6 M5 21h14";
+    out property <string> up: "M12 20V8 M6 13l6-6 6 6 M5 3h14";
+    out property <string> link: "M8 5h11v11 M19 5L5 19";
+    out property <string> phone: "M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z M11 18h2";
+    out property <string> store: "M4 8h16l-1 12H5z M9 8V6a3 3 0 0 1 6 0v2";
+}
+
+// Metadata, as the catalogue sets it: small spaced mono capitals. Callers pass capitals.
+export component Mono inherits Text {
+    color: Theme.muted;
+    font-family: Theme.mono-font;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.1px;
+}
+
+export component Caption inherits Mono { }
+
+// A catalogue headline: heavy condensed capitals. Callers pass capitals.
+export component Heading inherits Text {
+    color: Theme.text;
+    font-family: Theme.heading-font;
+    font-weight: 800;
+    font-size: 52px;
+}
+
+// The amazynk mark: an A in a circle.
+export component Mark inherits Path {
+    in property <color> color: Theme.text;
+    width: 24px;
+    height: 24px;
+    viewbox-width: 26;
+    viewbox-height: 26;
+    commands: "M13 1a12 12 0 1 0 0 24a12 12 0 1 0 0-24z M8 18.5L13 7l5 11.5 M9.8 14.2h6.4";
+    stroke: color;
+    stroke-width: 1.5px;
+    fill: transparent;
+    accessible-role: none;
+}
+
+// The ruler under a window's header: a tick every 12, a long one every 60.
+export component Ruler inherits Rectangle {
+    property <int> ticks: self.width / 12px + 1;
+    height: 10px;
+    accessible-role: none;
+    Rectangle { y: 0; height: 1px; background: Theme.line; }
+    for i in root.ticks: Rectangle {
+        x: min(i * 12px, root.width - 1px);
+        y: 0;
+        width: 1px;
+        height: Math.mod(i, 5) == 0 ? 10px : 5px;
+        background: Theme.line;
+    }
+}
+
+component Cross inherits Rectangle {
+    width: 11px;
+    height: 11px;
+    Rectangle { x: 5px; width: 1px; background: Theme.line; }
+    Rectangle { y: 5px; height: 1px; background: Theme.line; }
+}
+
+// Registration marks at the corners of a figure.
+export component RegMarks inherits Rectangle {
+    accessible-role: none;
+    Cross { x: -5px; y: -5px; }
+    Cross { x: parent.width - 6px; y: -5px; }
+    Cross { x: -5px; y: parent.height - 6px; }
+    Cross { x: parent.width - 6px; y: parent.height - 6px; }
+}
+
+// The app's icon, or a blank part with its initial where the catalog has none.
+export component Tile inherits Rectangle {
+    in property <string> initial;
+    in property <int> tint;
+    in property <image> icon;
+    in property <bool> has-icon;
+    in property <length> size: 48px;
+    width: size;
+    height: size;
+    border-width: has-icon ? 0 : 1px;
+    border-color: Theme.muted;
+    background: has-icon ? transparent : Theme.surface;
+    accessible-role: none;
+    if root.has-icon: Image {
+        width: parent.width;
+        height: parent.height;
+        source: root.icon;
+    }
+    if !root.has-icon: Text {
+        text: root.initial;
+        color: Theme.muted;
+        font-family: Theme.heading-font;
+        font-weight: 800;
+        font-size: root.size * 0.58;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+export component Button inherits Rectangle {
+    in property <string> text;
+    // What assistive technology reads, when the visible text isn't enough.
+    in property <string> label: self.text;
+    in property <string> description;
+    in property <bool> primary;
+    in property <bool> danger;
+    in property <string> icon;
+    // Greyed out and inert when false.
+    in property <bool> enabled: true;
+    callback clicked;
+    property <bool> hot: touch.has-hover && self.enabled;
+    property <color> ink: self.primary ? (self.hot ? Theme.on-signal : Theme.on-ink)
+        : self.hot ? Theme.on-ink : self.danger ? Theme.bad : Theme.text;
+    height: 38px;
+    opacity: self.enabled ? 1 : 0.45;
+    min-width: row.preferred-width;
+    horizontal-stretch: 0;
+    border-width: self.primary ? 0 : 1px;
+    border-color: self.danger ? Theme.bad : Theme.line;
+    background: self.primary ? (self.hot ? Theme.signal : Theme.ink)
+        : !self.hot ? transparent : self.danger ? Theme.bad : Theme.ink;
+    accessible-role: button;
+    accessible-label: self.label;
+    accessible-description: self.description;
+    accessible-enabled: self.enabled;
+    accessible-action-default => { if self.enabled { self.clicked(); } }
+    forward-focus: focus;
+    row := HorizontalLayout {
+        padding-left: 16px;
+        padding-right: 16px;
+        spacing: 10px;
+        alignment: center;
+        if root.icon != "": VerticalLayout {
+            alignment: center;
+            Icon { commands: root.icon; color: root.ink; }
+        }
+        Text {
+            text: root.text;
+            font-size: 13px;
+            font-weight: 600;
+            color: root.ink;
+            vertical-alignment: center;
+        }
+        // A main action points onward, in signal.
+        if root.primary && root.icon == "": VerticalLayout {
+            alignment: center;
+            Icon { commands: Icons.arrow; color: root.hot ? Theme.on-signal : Theme.signal; }
+        }
+    }
+    touch := TouchArea {
+        enabled: root.enabled;
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    focus := Focus {
+        enabled: root.enabled;
+        outset: 3px;
+        activate => { root.clicked(); }
+    }
+}
+
+export component IconButton inherits Rectangle {
+    in property <string> icon;
+    in property <string> label;
+    in property <color> tint: Theme.text;
+    in property <length> size: 34px;
+    callback clicked;
+    width: size;
+    height: size;
+    horizontal-stretch: 0;
+    border-width: 1px;
+    border-color: Theme.line;
+    background: touch.has-hover ? Theme.ink : transparent;
+    accessible-role: button;
+    accessible-label: label;
+    accessible-action-default => { clicked(); }
+    forward-focus: focus;
+    Icon { commands: root.icon; color: touch.has-hover ? Theme.on-ink : root.tint; }
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    focus := Focus {
+        outset: 3px;
+        activate => { root.clicked(); }
+    }
+}
+
+// A link: underlined ink. `external: false` for one that stays in Stockroom (no "opens
+// elsewhere" arrow).
+export component Link inherits Rectangle {
+    in property <string> text;
+    in property <string> label: self.text;
+    in property <bool> external: true;
+    // Set in spaced mono capitals, for a link that sits among metadata.
+    in property <bool> mono;
+    callback clicked;
+    height: 24px;
+    min-width: row.preferred-width;
+    horizontal-stretch: 0;
+    accessible-role: button;
+    accessible-label: self.label;
+    accessible-action-default => { self.clicked(); }
+    forward-focus: focus;
+    row := HorizontalLayout {
+        spacing: 6px;
+        caption := Text {
+            text: root.text;
+            color: touch.has-hover ? Theme.accent : Theme.text;
+            font-family: root.mono ? Theme.mono-font : Theme.body-font;
+            font-size: root.mono ? 11px : 13px;
+            letter-spacing: root.mono ? 1.1px : 0;
+            font-weight: 500;
+            vertical-alignment: center;
+            Rectangle {
+                y: parent.height - 4px;
+                height: 1px;
+                background: touch.has-hover ? Theme.accent : Theme.muted;
+                visible: !root.mono;
+            }
+        }
+        VerticalLayout {
+            alignment: center;
+            Icon {
+                width: 12px;
+                height: 12px;
+                commands: root.external ? Icons.link : Icons.arrow;
+                color: Theme.accent;
+            }
+        }
+    }
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    focus := Focus {
+        outset: 3px;
+        activate => { root.clicked(); }
+    }
+}
+
+// An on/off switch with its label.
+export component Switch inherits Rectangle {
+    in property <string> text;
+    in property <string> description;
+    in property <bool> checked;
+    in property <bool> enabled: true;
+    // Clicks ask the owner, which sets `checked` once the change took.
+    callback toggled(bool);
+    min-height: max(28px, col.preferred-height);
+    opacity: self.enabled ? 1 : 0.45;
+    accessible-role: switch;
+    accessible-label: self.text;
+    accessible-description: self.description;
+    accessible-checkable: true;
+    accessible-checked: self.checked;
+    accessible-enabled: self.enabled;
+    accessible-action-default => { if self.enabled { self.toggled(!self.checked); } }
+    forward-focus: focus;
+    HorizontalLayout {
+        spacing: 16px;
+        col := VerticalLayout {
+            alignment: center;
+            spacing: 3px;
+            Text { text: root.text; color: Theme.text; font-size: 14px; font-weight: 500; wrap: word-wrap; }
+            if root.description != "": Text {
+                text: root.description;
+                color: Theme.muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+        }
+        VerticalLayout {
+            alignment: center;
+            Rectangle {
+                width: 40px;
+                height: 20px;
+                border-width: 1px;
+                border-color: Theme.line;
+                background: root.checked ? Theme.signal : transparent;
+                Rectangle {
+                    x: root.checked ? parent.width - self.width - 4px : 4px;
+                    width: 12px;
+                    height: 12px;
+                    background: root.checked ? Theme.on-signal : Theme.line;
+                    animate x { duration: 120ms; easing: ease-out; }
+                }
+            }
+        }
+    }
+    TouchArea {
+        enabled: root.enabled;
+        mouse-cursor: pointer;
+        clicked => { root.toggled(!root.checked); }
+    }
+    focus := Focus {
+        enabled: root.enabled;
+        outset: 4px;
+        activate => { root.toggled(!root.checked); }
+    }
+}
+
+export component Check inherits Rectangle {
+    in property <string> text;
+    in-out property <bool> checked;
+    height: 26px;
+    min-width: row.preferred-width;
+    horizontal-stretch: 0;
+    accessible-role: checkbox;
+    accessible-label: self.text;
+    accessible-checkable: true;
+    accessible-checked: self.checked;
+    accessible-action-default => { self.checked = !self.checked; }
+    forward-focus: focus;
+    row := HorizontalLayout {
+        spacing: 10px;
+        Rectangle {
+            width: 16px;
+            height: 16px;
+            y: (parent.height - self.height) / 2;
+            border-width: 1px;
+            border-color: Theme.line;
+            background: root.checked ? Theme.ink : transparent;
+            Icon {
+                width: 12px;
+                height: 12px;
+                commands: Icons.check;
+                color: Theme.on-ink;
+                stroke-width: 3px;
+                visible: root.checked;
+            }
+        }
+        Text { text: root.text; color: Theme.soft-text; font-size: 13px; vertical-alignment: center; }
+    }
+    TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.checked = !root.checked; }
+    }
+    focus := Focus {
+        outset: 3px;
+        activate => { root.checked = !root.checked; }
+    }
+}
+
+// One option of a choice: a cell of a segmented control.
+component Segment inherits Rectangle {
+    in property <string> text;
+    in property <string> group;
+    in property <bool> active;
+    in property <bool> first;
+    in property <bool> enabled: true;
+    callback pick;
+    min-width: caption.preferred-width + 28px;
+    opacity: self.enabled ? 1 : 0.45;
+    background: active ? Theme.ink : touch.has-hover ? Theme.raised : transparent;
+    accessible-role: radio-button;
+    accessible-label: text;
+    accessible-description: group;
+    accessible-checkable: true;
+    accessible-checked: active;
+    accessible-enabled: enabled;
+    accessible-action-default => { if enabled { pick(); } }
+    forward-focus: focus;
+    Rectangle { x: 0; width: 1px; background: Theme.line; visible: !root.first; }
+    caption := Text {
+        text: root.text;
+        color: root.active ? Theme.on-ink : Theme.text;
+        font-size: 13px;
+        font-weight: root.active ? 600 : 500;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+    touch := TouchArea {
+        enabled: root.enabled;
+        mouse-cursor: pointer;
+        clicked => { root.pick(); }
+    }
+    focus := Focus {
+        enabled: root.enabled;
+        outset: 3px;
+        activate => { root.pick(); }
+    }
+}
+
+// A row of mutually exclusive options; `selected` is the index.
+export component Segmented inherits Rectangle {
+    in property <[string]> options;
+    in property <int> selected;
+    // Read with the options, e.g. "Updates".
+    in property <string> label;
+    // Options from this index on can't be picked (-1: all can).
+    in property <int> disabled-from: -1;
+    callback pick(int);
+    height: 34px;
+    horizontal-stretch: 0;
+    min-width: row.preferred-width;
+    border-width: 1px;
+    border-color: Theme.line;
+    row := HorizontalLayout {
+        padding: 1px;
+        for option[i] in root.options: Segment {
+            text: option;
+            group: root.label;
+            active: i == root.selected;
+            first: i == 0;
+            enabled: root.disabled-from < 0 || i < root.disabled-from;
+            pick => { root.pick(i); }
+        }
+    }
+}
+
+// A gauge: an ink bar on a hairline, with a signal needle at its end.
+export component ProgressBar inherits Rectangle {
+    // 0–1; below 0 when the total isn't known yet.
+    in property <float> fraction;
+    property <length> filled: root.fraction >= 0 ? root.width * clamp(root.fraction, 0, 1) : root.width * 0.3;
+    height: 12px;
+    accessible-role: progress-indicator;
+    accessible-value: root.fraction >= 0 ? Math.round(root.fraction * 100) + "%" : "";
+    accessible-value-minimum: 0;
+    accessible-value-maximum: 1;
+    Rectangle { y: 5px; height: 2px; background: Theme.border; }
+    Rectangle { x: parent.width - 1px; y: 2px; width: 1px; height: 8px; background: Theme.muted; }
+    Rectangle { x: 0; y: 4px; width: root.filled; height: 4px; background: Theme.ink; }
+    Rectangle {
+        x: clamp(root.filled - 1px, 0px, root.width - 2px);
+        y: 0;
+        width: 2px;
+        height: 12px;
+        background: Theme.signal;
+    }
+}
+
+// A status dot, as beside "VERSION 0.1" in the catalogue's index.
+export component Dot inherits Rectangle {
+    in property <color> tint: Theme.signal;
+    width: 7px;
+    height: 7px;
+    border-radius: 3.5px;
+    background: tint;
+    accessible-role: none;
+}
+
+// A message set off by a bar in its tone's colour: errors, notes.
+export component Notice inherits Rectangle {
+    in property <string> text;
+    in property <string> detail;
+    in property <Tone> tone: Tone.warn;
+    property <color> bar: tone == Tone.bad ? Theme.bad : tone == Tone.warn ? Theme.warn : Theme.line;
+    min-height: col.preferred-height;
+    background: Theme.surface;
+    accessible-role: AccessibleRole.text;
+    accessible-label: self.text;
+    accessible-description: self.detail;
+    Rectangle { x: 0; width: 3px; background: root.bar; }
+    col := VerticalLayout {
+        padding: 12px;
+        padding-left: 17px;
+        spacing: 6px;
+        HorizontalLayout {
+            spacing: 10px;
+            if root.tone == Tone.bad || root.tone == Tone.warn: VerticalLayout {
+                alignment: start;
+                padding-top: 1px;
+                Icon { commands: Icons.warn; color: root.bar; }
+            }
+            Text { text: root.text; color: Theme.text; font-size: 13px; wrap: word-wrap; horizontal-stretch: 1; }
+        }
+        if root.detail != "": Text {
+            text: root.detail;
+            color: Theme.muted;
+            font-family: Theme.mono-font;
+            font-size: 11px;
+            font-weight: 500;
+            wrap: word-wrap;
+        }
+    }
+}

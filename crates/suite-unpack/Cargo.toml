@@ -1,0 +1,22 @@
+[package]
+name = "suite-unpack"
+description = "Safe extraction of tar.gz and zip, dmg via hdiutil, AppImage placement and Flatpak bundles"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+suite-platform.workspace = true
+flate2.workspace = true
+tar.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+zip.workspace = true
+
+[dev-dependencies]
+suite-testkit.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

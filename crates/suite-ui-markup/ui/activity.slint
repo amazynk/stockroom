@@ -1,0 +1,149 @@
+// Activity: installs and updates in progress, problems, and the log of past changes.
+
+import { ScrollView } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+import { Tone, Ui, Tile, Button, IconButton, Caption, Mono, Heading, ProgressBar, Notice, Icons } from "controls.slint";
+import { JobData, LogData } from "types.slint";
+
+// A job: a ruled row with its gauge.
+component JobCard inherits Rectangle {
+    in property <JobData> job;
+    callback open-app(string);
+    callback retry(int);
+    callback dismiss(int);
+    min-height: col.preferred-height;
+    accessible-role: groupbox;
+    accessible-label: job.title;
+    accessible-description: job.state == 3 ? job.message : job.stage + " " + job.detail;
+    col := VerticalLayout {
+        padding-top: 16px;
+        padding-bottom: 16px;
+        padding-left: 8px;
+        padding-right: 8px;
+        spacing: 12px;
+        HorizontalLayout {
+            spacing: 16px;
+            VerticalLayout {
+                alignment: center;
+                Tile { size: 40px; initial: root.job.initial; tint: root.job.tint; }
+            }
+            VerticalLayout {
+                spacing: 2px;
+                alignment: center;
+                horizontal-stretch: 1;
+                Heading { text: root.job.title.to-uppercase(); font-size: 26px; overflow: elide; }
+                if root.job.state != 3: Mono {
+                    text: root.job.stage.to-uppercase();
+                    color: root.job.state == 2 ? Theme.ok : Theme.muted;
+                }
+            }
+            HorizontalLayout {
+                spacing: 8px;
+                alignment: end;
+                if root.job.can-open: VerticalLayout {
+                    alignment: center;
+                    Button {
+                        text: @tr("Open");
+                        label: @tr("Open {}", root.job.app);
+                        primary: true;
+                        clicked => { root.open-app(root.job.app); }
+                    }
+                }
+                if root.job.can-retry: VerticalLayout {
+                    alignment: center;
+                    Button {
+                        text: @tr("Try again");
+                        clicked => { root.retry(root.job.id); }
+                    }
+                }
+                if root.job.state >= 2: VerticalLayout {
+                    alignment: center;
+                    IconButton {
+                        size: 38px;
+                        icon: Icons.close;
+                        label: @tr("Dismiss {}", root.job.title);
+                        clicked => { root.dismiss(root.job.id); }
+                    }
+                }
+            }
+        }
+        if root.job.state <= 1: VerticalLayout {
+            spacing: 6px;
+            ProgressBar { fraction: root.job.fraction; }
+            Mono { text: root.job.detail.to-uppercase(); }
+        }
+        if root.job.state == 3: Notice {
+            text: root.job.message;
+            detail: root.job.error-detail;
+            tone: Tone.bad;
+        }
+    }
+    Rectangle { y: parent.height - 1px; height: 1px; background: Theme.border; }
+}
+
+export component ActivityPage inherits Rectangle {
+    in property <[JobData]> jobs;
+    in property <[LogData]> log;
+    callback open-app(string);
+    callback retry(int);
+    callback dismiss(int);
+    ScrollView {
+        VerticalLayout {
+            padding: Theme.pad;
+            padding-top: 22px;
+            alignment: start;
+            Heading { text: @tr("Activity").to-uppercase(); font-size: 64px; }
+            Rectangle { height: 6px; }
+            Rectangle { height: 1px; background: Theme.line; }
+            if root.jobs.length == 0: Mono {
+                height: 56px;
+                text: @tr("Nothing is being installed or updated right now.").to-uppercase();
+                vertical-alignment: center;
+                wrap: word-wrap;
+            }
+            for j in root.jobs: JobCard {
+                job: j;
+                open-app(id) => { root.open-app(id); }
+                retry(id) => { root.retry(id); }
+                dismiss(id) => { root.dismiss(id); }
+            }
+            VerticalLayout {
+                padding-top: 34px;
+                Heading { text: @tr("PAST CHANGES"); font-size: 30px; }
+                Rectangle { height: 6px; }
+                Rectangle { height: 1px; background: Theme.line; }
+                if root.log.length == 0: Mono {
+                    height: 56px;
+                    text: @tr("No changes yet.").to-uppercase();
+                    vertical-alignment: center;
+                }
+                for entry in root.log: Rectangle {
+                    height: 38px;
+                    accessible-role: list-item;
+                    accessible-label: entry.text;
+                    accessible-description: entry.when;
+                    HorizontalLayout {
+                        padding-left: 8px;
+                        padding-right: 8px;
+                        spacing: 16px;
+                        Mono {
+                            text: entry.when.to-uppercase();
+                            width: 168px;
+                            vertical-alignment: center;
+                            overflow: elide;
+                        }
+                        Text {
+                            text: entry.text;
+                            color: entry.tone == Tone.normal || entry.tone == Tone.muted ? Theme.text : Ui.tone(entry.tone);
+                            font-size: 14px;
+                            vertical-alignment: center;
+                            overflow: elide;
+                            horizontal-stretch: 1;
+                        }
+                    }
+                    Rectangle { y: parent.height - 1px; height: 1px; background: Theme.border; }
+                }
+            }
+        }
+    }
+}

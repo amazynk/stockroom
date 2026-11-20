@@ -1,0 +1,292 @@
+// One app's data sheet: what it is, what it needs, and how Stockroom keeps it.
+
+import { ScrollView } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+import { Tone, Ui, Tile, Button, IconButton, Link, Segmented, Caption, Mono, Heading, ProgressBar, Notice, Icon, Icons, Dot, RegMarks } from "controls.slint";
+import { PageData, Action } from "types.slint";
+
+// A part of the sheet: an ink rule, its name in mono, then its rows.
+component Section inherits Rectangle {
+    in property <string> title;
+    min-height: col.preferred-height;
+    accessible-role: groupbox;
+    accessible-label: root.title;
+    col := VerticalLayout {
+        spacing: 12px;
+        padding-bottom: 8px;
+        Rectangle { height: 1px; background: Theme.line; }
+        Caption { text: root.title; }
+        @children
+    }
+}
+
+export component AppPage inherits Rectangle {
+    in property <PageData> data;
+    callback back();
+    callback act(string);
+    callback open-url(string);
+    callback open-other(string, int);
+    callback set-channel(string, int);
+    callback set-policy(string, int);
+    callback rollback(string);
+    callback ask-remove();
+    property <bool> narrow: root.width < 820px;
+    property <bool> out: root.data.action != Action.none;
+
+    ScrollView {
+        VerticalLayout {
+            padding: Theme.pad;
+            padding-top: 18px;
+            spacing: 20px;
+            alignment: start;
+            HorizontalLayout {
+                spacing: 14px;
+                IconButton {
+                    icon: Icons.back;
+                    label: @tr("Back to all apps");
+                    clicked => { root.back(); }
+                }
+                Mono { text: @tr("All apps").to-uppercase(); vertical-alignment: center; horizontal-stretch: 1; }
+                Mono { text: @tr("DATA SHEET"); vertical-alignment: center; horizontal-alignment: right; }
+            }
+            // The head: the part as a figure, its number, name, pitch and main action.
+            HorizontalLayout {
+                spacing: 28px;
+                padding-top: 6px;
+                padding-left: 6px;
+                VerticalLayout {
+                    alignment: start;
+                    Rectangle {
+                        width: root.narrow ? 104px : 136px;
+                        height: self.width;
+                        RegMarks { }
+                        Tile {
+                            size: parent.width - 40px;
+                            initial: root.data.initial;
+                            tint: root.data.tint;
+                            icon: root.data.icon;
+                            has-icon: root.data.has-icon;
+                        }
+                    }
+                }
+                VerticalLayout {
+                    spacing: 6px;
+                    horizontal-stretch: 1;
+                    HorizontalLayout {
+                        spacing: 12px;
+                        alignment: start;
+                        if root.data.part != "" && root.data.vendor == "": Mono { text: root.data.part; color: Theme.accent; }
+                        if root.data.vendor != "": Mono { text: root.data.vendor.to-uppercase(); }
+                    }
+                    Heading {
+                        text: root.data.name.to-uppercase();
+                        font-size: root.narrow ? 52px : 76px;
+                        overflow: elide;
+                    }
+                    Text { text: root.data.pitch; color: Theme.soft-text; font-size: 16px; wrap: word-wrap; }
+                    HorizontalLayout {
+                        spacing: 9px;
+                        padding-top: 4px;
+                        if root.out: VerticalLayout {
+                            alignment: start;
+                            padding-top: 3px;
+                            Dot {
+                                tint: root.data.tone == Tone.muted || root.data.tone == Tone.accent || root.data.tone == Tone.normal
+                                    ? Theme.signal : Ui.tone(root.data.tone);
+                            }
+                        }
+                        Mono {
+                            text: root.data.status.to-uppercase();
+                            color: root.data.tone == Tone.muted && root.out ? Theme.text : Ui.tone(root.data.tone);
+                            wrap: word-wrap;
+                            horizontal-stretch: 1;
+                        }
+                    }
+                    if root.data.progress >= 0: VerticalLayout {
+                        padding-top: 6px;
+                        ProgressBar { fraction: root.data.progress; }
+                    }
+                }
+                VerticalLayout {
+                    alignment: end;
+                    if root.data.action != Action.none && root.data.action != Action.busy: Button {
+                        height: 44px;
+                        text: root.data.action-text;
+                        label: root.data.action-text + " " + root.data.name;
+                        primary: root.data.action != Action.open;
+                        icon: root.data.action == Action.store ? Icons.store : root.data.action == Action.website ? Icons.link : "";
+                        clicked => { root.act(root.data.id); }
+                    }
+                }
+            }
+            if root.data.problem != "": Notice { text: root.data.problem; tone: Tone.warn; }
+            if root.data.store-note != "": Notice { text: root.data.store-note; tone: Tone.normal; }
+
+            HorizontalLayout {
+                spacing: Theme.pad;
+                padding-top: 6px;
+                alignment: stretch;
+                // Left: about and requirements.
+                VerticalLayout {
+                    spacing: 20px;
+                    horizontal-stretch: 3;
+                    alignment: start;
+                    if root.data.description != "": Section {
+                        title: @tr("ABOUT");
+                        Text { text: root.data.description; color: Theme.text; font-size: 15px; wrap: word-wrap; }
+                        HorizontalLayout {
+                            spacing: 22px;
+                            alignment: start;
+                            if root.data.notes-url != "": Link {
+                                text: @tr("Release notes");
+                                clicked => { root.open-url(root.data.notes-url); }
+                            }
+                            if root.data.homepage != "": Link {
+                                text: @tr("Website");
+                                clicked => { root.open-url(root.data.homepage); }
+                            }
+                        }
+                    }
+                    if root.data.reqs.length > 0: Section {
+                        title: @tr("REQUIREMENTS");
+                        for r in root.data.reqs: HorizontalLayout {
+                            spacing: 10px;
+                            accessible-role: AccessibleRole.text;
+                            accessible-label: r.text;
+                            VerticalLayout {
+                                alignment: start;
+                                padding-top: 1px;
+                                Icon {
+                                    commands: r.ok ? Icons.check : Icons.warn;
+                                    color: r.ok ? Theme.ok : Theme.bad;
+                                }
+                            }
+                            Text { text: r.text; color: Theme.soft-text; font-size: 13px; wrap: word-wrap; horizontal-stretch: 1; }
+                        }
+                    }
+                    if root.data.others.length > 0: Section {
+                        title: @tr("ALSO ON THIS COMPUTER");
+                        for o[i] in root.data.others: HorizontalLayout {
+                            spacing: 12px;
+                            VerticalLayout {
+                                spacing: 3px;
+                                horizontal-stretch: 1;
+                                Text { text: o.text; color: Theme.text; font-size: 14px; font-weight: 500; wrap: word-wrap; }
+                                Text { text: o.note; color: Theme.muted; font-size: 12px; wrap: word-wrap; }
+                            }
+                            if o.can-open: VerticalLayout {
+                                alignment: center;
+                                Button {
+                                    text: @tr("Open");
+                                    label: @tr("Open {}", o.text);
+                                    clicked => { root.open-other(root.data.id, i); }
+                                }
+                            }
+                        }
+                    }
+                    if root.data.phones.length > 0: Section {
+                        title: @tr("GET IT ON YOUR PHONE");
+                        Text {
+                            text: @tr("Point your phone's camera at a code.");
+                            color: Theme.muted;
+                            font-size: 13px;
+                        }
+                        HorizontalLayout {
+                            spacing: 28px;
+                            padding: 6px;
+                            alignment: start;
+                            for p in root.data.phones: VerticalLayout {
+                                spacing: 12px;
+                                Rectangle {
+                                    width: 148px;
+                                    height: 148px;
+                                    background: Theme.paper;
+                                    accessible-role: image;
+                                    accessible-label: @tr("Code for {}: {}", p.label, p.url);
+                                    Image {
+                                        width: 136px;
+                                        height: 136px;
+                                        source: p.code;
+                                        image-rendering: pixelated;
+                                    }
+                                    RegMarks { }
+                                }
+                                Mono { text: p.label.to-uppercase(); horizontal-alignment: center; }
+                            }
+                        }
+                    }
+                }
+                // Right: the table of facts, and how it's kept.
+                VerticalLayout {
+                    spacing: 20px;
+                    horizontal-stretch: 2;
+                    alignment: start;
+                    min-width: 300px;
+                    if root.data.facts.length > 0: VerticalLayout {
+                        Rectangle { height: 1px; background: Theme.line; }
+                        for f in root.data.facts: Rectangle {
+                            min-height: max(38px, row.preferred-height);
+                            accessible-role: AccessibleRole.text;
+                            accessible-label: f.label + ": " + f.value;
+                            row := HorizontalLayout {
+                                padding-top: 10px;
+                                padding-bottom: 10px;
+                                spacing: 12px;
+                                Mono { text: f.label.to-uppercase(); width: 108px; vertical-alignment: center; overflow: elide; }
+                                Text { text: f.value; color: Theme.text; font-size: 14px; wrap: word-wrap; vertical-alignment: center; horizontal-stretch: 1; }
+                            }
+                            Rectangle { y: parent.height - 1px; height: 1px; background: Theme.border; }
+                        }
+                    }
+                    if root.data.managed || root.data.can-beta: Section {
+                        title: @tr("UPDATES");
+                        if root.data.can-beta: VerticalLayout {
+                            spacing: 8px;
+                            Text { text: @tr("Channel"); color: Theme.soft-text; font-size: 13px; }
+                            HorizontalLayout {
+                                alignment: start;
+                                Segmented {
+                                    label: @tr("Channel");
+                                    options: [@tr("Stable"), @tr("Beta")];
+                                    selected: root.data.channel;
+                                    pick(i) => { root.set-channel(root.data.id, i); }
+                                }
+                            }
+                        }
+                        if root.data.managed: VerticalLayout {
+                            spacing: 8px;
+                            Text { text: @tr("New versions"); color: Theme.soft-text; font-size: 13px; }
+                            HorizontalLayout {
+                                alignment: start;
+                                Segmented {
+                                    label: @tr("New versions");
+                                    options: [@tr("Install"), @tr("Ask first"), @tr("Never")];
+                                    selected: root.data.policy;
+                                    pick(i) => { root.set-policy(root.data.id, i); }
+                                }
+                            }
+                        }
+                    }
+                    if root.data.managed: Section {
+                        title: @tr("MANAGE");
+                        HorizontalLayout {
+                            alignment: start;
+                            spacing: 10px;
+                            if root.data.rollback != "": Button {
+                                text: root.data.rollback;
+                                icon: Icons.back;
+                                clicked => { root.rollback(root.data.id); }
+                            }
+                            Button {
+                                text: @tr("Remove");
+                                label: @tr("Remove {}", root.data.name);
+                                danger: true;
+                                clicked => { root.ask-remove(); }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,117 @@
+// Settings: automatic updates, metered connections, who installs are for, language, theme.
+
+import { ScrollView } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+import { Switch, Segmented, Caption, Heading, Notice, Tone } from "controls.slint";
+
+// A group of settings: an ink rule, its name in mono, then its rows.
+component Group inherits Rectangle {
+    in property <string> title;
+    min-height: col.preferred-height;
+    accessible-role: groupbox;
+    accessible-label: root.title;
+    col := VerticalLayout {
+        spacing: 16px;
+        padding-bottom: 14px;
+        Rectangle { height: 1px; background: Theme.line; }
+        Caption { text: root.title; }
+        @children
+    }
+}
+
+component Labelled inherits VerticalLayout {
+    in property <string> text;
+    in property <string> note;
+    spacing: 8px;
+    Text { text: root.text; color: Theme.text; font-size: 14px; font-weight: 500; }
+    if root.note != "": Text { text: root.note; color: Theme.muted; font-size: 12px; wrap: word-wrap; }
+    HorizontalLayout {
+        alignment: start;
+        @children
+    }
+}
+
+export component SettingsPage inherits Rectangle {
+    in property <bool> auto-update;
+    // "Runs daily from the systemd user timer."
+    in property <string> auto-update-note;
+    in property <bool> skip-metered;
+    in property <int> scope;
+    in property <bool> all-users-available;
+    in property <int> language;
+    in property <[string]> languages;
+    in property <int> theme;
+    in property <string> problem;
+    callback set-auto-update(bool);
+    callback set-skip-metered(bool);
+    callback set-scope(int);
+    callback set-language(int);
+    callback set-theme(int);
+    ScrollView {
+        HorizontalLayout {
+            alignment: start;
+            VerticalLayout {
+                padding: Theme.pad;
+                padding-top: 22px;
+                spacing: 22px;
+                alignment: start;
+                max-width: 760px;
+                Heading { text: @tr("Settings").to-uppercase(); font-size: 64px; }
+                if root.problem != "": Notice { text: root.problem; tone: Tone.bad; }
+                Group {
+                    title: @tr("UPDATES");
+                    Switch {
+                        text: @tr("Update apps automatically");
+                        description: root.auto-update-note;
+                        checked: root.auto-update;
+                        toggled(on) => { root.set-auto-update(on); }
+                    }
+                    Switch {
+                        text: @tr("Wait for an unmetered connection");
+                        description: @tr("Automatic updates skip mobile hotspots and other metered networks.");
+                        checked: root.skip-metered;
+                        enabled: root.auto-update;
+                        toggled(on) => { root.set-skip-metered(on); }
+                    }
+                }
+                Group {
+                    title: @tr("INSTALLS");
+                    Labelled {
+                        text: @tr("Install apps for");
+                        note: root.all-users-available
+                            ? @tr("Installing for everyone asks for an administrator's password.")
+                            : @tr("Installing for everyone on this computer comes in a later version.");
+                        Segmented {
+                            label: @tr("Install apps for");
+                            options: [@tr("Just me"), @tr("Everyone")];
+                            selected: root.scope;
+                            disabled-from: root.all-users-available ? -1 : 1;
+                            pick(i) => { root.set-scope(i); }
+                        }
+                    }
+                }
+                Group {
+                    title: @tr("APPEARANCE");
+                    Labelled {
+                        text: @tr("Language");
+                        Segmented {
+                            label: @tr("Language");
+                            options: root.languages;
+                            selected: root.language;
+                            pick(i) => { root.set-language(i); }
+                        }
+                    }
+                    Labelled {
+                        text: @tr("Theme");
+                        Segmented {
+                            label: @tr("Theme");
+                            options: [@tr("System"), @tr("Light"), @tr("Dark")];
+                            selected: root.theme;
+                            pick(i) => { root.set-theme(i); }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

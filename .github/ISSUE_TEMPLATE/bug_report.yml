@@ -1,0 +1,42 @@
+name: Bug report
+description: Stockroom installed, updated or removed something wrongly, or did not start
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. For security problems, use [private reporting](https://github.com/amazynk/stockroom/security/advisories/new) instead.
+  - type: checkboxes
+    id: searched
+    attributes:
+      label: Before you open this
+      options:
+        - label: I searched the existing issues and this isn't one of them.
+          required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead. Name the app if one was involved.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Stockroom version
+      description: The output of `stockroom --version`, or the commit you built from
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Operating system
+      description: For example Ubuntu 24.04, Windows 11 24H2, or macOS 15 on Apple Silicon
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `stockroom doctor`
+      description: It lists the platform, the scheduler, the state and the app list. Remove anything you would rather not share.
+      render: text

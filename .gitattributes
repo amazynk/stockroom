@@ -1,0 +1,10 @@
+# The scripts are run as they are checked out.
+* text=auto eol=lf
+
+# Keep generated files out of GitHub's language stats and diffs.
+Cargo.lock linguist-generated
+catalog/builtin.json linguist-generated
+*.png binary
+*.ico binary
+*.icns binary
+*.ttf binary

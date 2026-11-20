@@ -1,0 +1,28 @@
+// Keyboard access for hand-drawn controls: Space and Enter activate, a ring shows while focused.
+
+import { Theme } from "theme.slint";
+
+export component Focus inherits FocusScope {
+    // How far the ring sits outside the control; negative draws it inside, for clipped lists.
+    in property <length> outset: 3px;
+    callback activate();
+    focus-on-click: false;
+
+    key-pressed(event) => {
+        if event.text == " " || event.text == Key.Return {
+            root.activate();
+            return accept;
+        }
+        reject
+    }
+
+    Rectangle {
+        x: -root.outset;
+        y: -root.outset;
+        width: root.width + 2 * root.outset;
+        height: root.height + 2 * root.outset;
+        border-width: Theme.focus-width;
+        border-color: Theme.focus;
+        visible: root.has-focus;
+    }
+}

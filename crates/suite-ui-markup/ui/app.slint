@@ -1,0 +1,543 @@
+import "fonts/archivo/Archivo-Regular.ttf";
+import "fonts/archivo/Archivo-Medium.ttf";
+import "fonts/archivo/Archivo-SemiBold.ttf";
+import "fonts/archivo/ArchivoCondensed-ExtraBold.ttf";
+import "fonts/archivo/ArchivoExpanded-ExtraBold.ttf";
+import "fonts/jetbrains-mono/JetBrainsMono-Regular.ttf";
+import "fonts/jetbrains-mono/JetBrainsMono-Medium.ttf";
+import { Theme, ThemeMode } from "theme.slint";
+import { Focus } from "focus.slint";
+import { Tone, Ui, Tile, Button, IconButton, Check, ProgressBar, Notice, Icons, Caption, Mono, Heading, Link, Mark, Ruler, Dot } from "controls.slint";
+import { CardData, UpdateItem, Fact, ReqLine, OtherInstall, PhoneCode, PageData, JobData, LogData, Action } from "types.slint";
+import { HomePage } from "home.slint";
+import { AppPage } from "page.slint";
+import { ActivityPage } from "activity.slint";
+import { SettingsPage } from "settings.slint";
+
+export { Theme, ThemeMode, Tone, CardData, UpdateItem, Fact, ReqLine, OtherInstall, PhoneCode, PageData, JobData, LogData, Action }
+
+// The mark and the name, as at the top of amazynk.com.
+component Wordmark inherits HorizontalLayout {
+    in property <length> size: 16px;
+    spacing: 10px;
+    horizontal-stretch: 0;
+    VerticalLayout {
+        alignment: center;
+        Mark { width: root.size * 1.5; height: root.size * 1.5; }
+    }
+    Text {
+        text: "AMAZYNK";
+        color: Theme.text;
+        font-family: Theme.mark-font;
+        font-weight: 800;
+        font-size: root.size;
+        vertical-alignment: center;
+        accessible-role: none;
+    }
+}
+
+// A page of the window, named in the header in spaced mono capitals.
+component Tab inherits Rectangle {
+    in property <string> text;
+    in property <bool> active;
+    in property <int> count;
+    callback pick;
+    height: 30px;
+    min-width: row.preferred-width;
+    accessible-role: tab;
+    accessible-label: text;
+    accessible-description: count > 0 ? @tr("{n} running" | "{n} running" % count) : "";
+    accessible-item-selectable: true;
+    accessible-item-selected: active;
+    accessible-action-default => { pick(); }
+    forward-focus: focus;
+    row := HorizontalLayout {
+        spacing: 8px;
+        Mono {
+            text: root.text.to-uppercase();
+            color: root.active || touch.has-hover ? Theme.text : Theme.muted;
+            vertical-alignment: center;
+        }
+        if root.count > 0: VerticalLayout {
+            alignment: center;
+            Rectangle {
+                height: 16px;
+                min-width: max(16px, badge.preferred-width + 8px);
+                background: Theme.signal;
+                badge := Text {
+                    text: root.count;
+                    color: Theme.on-signal;
+                    font-family: Theme.mono-font;
+                    font-size: 11px;
+                    font-weight: 500;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+            }
+        }
+    }
+    Rectangle {
+        y: parent.height - 4px;
+        height: 1px;
+        background: Theme.line;
+        visible: root.active;
+    }
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.pick(); }
+    }
+    focus := Focus {
+        outset: 4px;
+        activate => { root.pick(); }
+    }
+}
+
+// Asks before removing an app; can also remove its settings and data.
+component RemoveDialog inherits Rectangle {
+    in property <string> name;
+    in property <bool> has-data;
+    callback confirm(bool);
+    callback cancel();
+    background: Theme.scrim;
+    TouchArea { }
+    Rectangle {
+        width: min(460px, parent.width - 40px);
+        height: col.preferred-height;
+        background: Theme.dialog;
+        border-width: 1px;
+        border-color: Theme.line;
+        accessible-role: groupbox;
+        accessible-label: @tr("Remove {}?", root.name);
+        col := VerticalLayout {
+            padding: 24px;
+            spacing: 14px;
+            Heading {
+                text: @tr("Remove {}?", root.name).to-uppercase();
+                font-size: 36px;
+                wrap: word-wrap;
+            }
+            Text {
+                text: @tr("Its program files, shortcuts and menu entries go. Your files stay where they are.");
+                color: Theme.soft-text;
+                font-size: 14px;
+                wrap: word-wrap;
+            }
+            purge := Check {
+                visible: root.has-data;
+                text: @tr("Also remove its settings and data");
+            }
+            HorizontalLayout {
+                spacing: 10px;
+                padding-top: 4px;
+                alignment: end;
+                Button {
+                    text: @tr("Cancel");
+                    clicked => { root.cancel(); }
+                }
+                Button {
+                    text: @tr("Remove");
+                    label: @tr("Remove {}", root.name);
+                    danger: true;
+                    clicked => { root.confirm(purge.checked && root.has-data); }
+                }
+            }
+        }
+    }
+}
+
+export component AppWindow inherits Window {
+    in property <string> product: "Stockroom";
+    // Room for the system's title bar where the window draws under it (macOS).
+    in property <length> title-bar;
+    title: root.product;
+    // Stockroom's icon in the title bar and taskbar (Windows, X11); the small cut, as
+    // these show it at 16 to 32 px.
+    icon: @image-url("../../../packaging/icons/stockroom-48.png");
+    preferred-width: 1120px;
+    preferred-height: 760px;
+    min-width: 640px;
+    min-height: 480px;
+    background: Theme.bg;
+    default-font-family: Theme.body-font;
+    default-font-size: 14px;
+
+    // 0 home, 1 app page, 2 activity, 3 settings.
+    in-out property <int> page: 0;
+    in property <bool> loading: true;
+    in property <string> problem;
+    in property <string> problem-detail;
+
+    in property <[CardData]> family;
+    in property <[CardData]> others;
+    in property <[UpdateItem]> updates;
+    in property <string> updates-title;
+    in property <string> install-all;
+    in property <string> stock;
+
+    in property <PageData> app;
+    in-out property <bool> removing;
+
+    in property <[JobData]> jobs;
+    in property <[LogData]> log;
+    in property <int> running;
+
+    in property <bool> auto-update: true;
+    in property <string> auto-update-note;
+    in property <bool> skip-metered: true;
+    in property <int> scope;
+    in property <bool> all-users-available;
+    in property <int> language;
+    in property <[string]> languages;
+    in property <int> theme;
+    in property <string> settings-problem;
+    // Something that went wrong just now (opening an app, a setting); shown on every page.
+    in property <string> notice;
+    in property <string> notice-detail;
+
+    callback show-page(int);
+    callback dismiss-notice();
+    callback refresh();
+    callback open-page(string);
+    callback act(string);
+    callback install-all-clicked();
+    callback update-all();
+    callback open-url(string);
+    callback open-other(string, int);
+    callback set-channel(string, int);
+    callback set-policy(string, int);
+    callback rollback(string);
+    callback remove(string, bool);
+    callback open-app(string);
+    callback retry(int);
+    callback dismiss(int);
+    callback set-auto-update(bool);
+    callback set-skip-metered(bool);
+    callback set-scope(int);
+    callback set-language(int);
+    callback set-theme(int);
+
+    // The sheet's twelve columns, faintly, behind everything.
+    for i in 13: Rectangle {
+        x: Theme.pad + i * (root.width - 2 * Theme.pad) / 12;
+        y: root.title-bar + 62px;
+        width: 1px;
+        height: root.height - self.y;
+        background: Theme.grid;
+    }
+    VerticalLayout {
+        padding-top: root.title-bar;
+        Rectangle {
+            height: 72px;
+            HorizontalLayout {
+                padding-left: Theme.pad;
+                padding-right: Theme.pad;
+                padding-bottom: 10px;
+                spacing: 14px;
+                Wordmark { }
+                Mono {
+                    text: root.product.to-uppercase();
+                    vertical-alignment: center;
+                    horizontal-stretch: 1;
+                    overflow: elide;
+                }
+                HorizontalLayout {
+                    spacing: 26px;
+                    alignment: end;
+                    padding-top: 16px;
+                    padding-bottom: 16px;
+                    Tab {
+                        text: @tr("Apps");
+                        active: root.page <= 1;
+                        pick => { root.show-page(0); }
+                    }
+                    Tab {
+                        text: @tr("Activity");
+                        active: root.page == 2;
+                        count: root.running;
+                        pick => { root.show-page(2); }
+                    }
+                    Tab {
+                        text: @tr("Settings");
+                        active: root.page == 3;
+                        pick => { root.show-page(3); }
+                    }
+                }
+                VerticalLayout {
+                    alignment: center;
+                    padding-left: 6px;
+                    IconButton {
+                        icon: Icons.refresh;
+                        label: @tr("Check for updates");
+                        clicked => { root.refresh(); }
+                    }
+                }
+            }
+            Ruler { x: Theme.pad; y: parent.height - 10px; width: parent.width - 2 * Theme.pad; }
+        }
+        if root.notice != "": HorizontalLayout {
+            padding-left: Theme.pad;
+            padding-right: Theme.pad;
+            padding-top: 16px;
+            spacing: 10px;
+            Notice { text: root.notice; detail: root.notice-detail; tone: Tone.bad; horizontal-stretch: 1; }
+            VerticalLayout {
+                alignment: center;
+                IconButton {
+                    icon: Icons.close;
+                    label: @tr("Dismiss the message");
+                    clicked => { root.dismiss-notice(); }
+                }
+            }
+        }
+        Rectangle {
+            vertical-stretch: 1;
+            if root.page == 0: HomePage {
+                family: root.family;
+                others: root.others;
+                updates: root.updates;
+                updates-title: root.updates-title;
+                install-all: root.install-all;
+                stock: root.stock;
+                loading: root.loading;
+                problem: root.problem;
+                problem-detail: root.problem-detail;
+                open-page(id) => { root.open-page(id); }
+                act(id) => { root.act(id); }
+                install-all-clicked => { root.install-all-clicked(); }
+                update-all => { root.update-all(); }
+            }
+            if root.page == 1: AppPage {
+                data: root.app;
+                back => { root.show-page(0); }
+                act(id) => { root.act(id); }
+                open-url(u) => { root.open-url(u); }
+                open-other(id, i) => { root.open-other(id, i); }
+                set-channel(id, i) => { root.set-channel(id, i); }
+                set-policy(id, i) => { root.set-policy(id, i); }
+                rollback(id) => { root.rollback(id); }
+                ask-remove => { root.removing = true; }
+            }
+            if root.page == 2: ActivityPage {
+                jobs: root.jobs;
+                log: root.log;
+                open-app(id) => { root.open-app(id); }
+                retry(id) => { root.retry(id); }
+                dismiss(id) => { root.dismiss(id); }
+            }
+            if root.page == 3: SettingsPage {
+                auto-update: root.auto-update;
+                auto-update-note: root.auto-update-note;
+                skip-metered: root.skip-metered;
+                scope: root.scope;
+                all-users-available: root.all-users-available;
+                language: root.language;
+                languages: root.languages;
+                theme: root.theme;
+                problem: root.settings-problem;
+                set-auto-update(on) => { root.set-auto-update(on); }
+                set-skip-metered(on) => { root.set-skip-metered(on); }
+                set-scope(i) => { root.set-scope(i); }
+                set-language(i) => { root.set-language(i); }
+                set-theme(i) => { root.set-theme(i); }
+            }
+        }
+    }
+    if root.removing && root.page == 1: RemoveDialog {
+        name: root.app.name;
+        has-data: root.app.has-data;
+        cancel => { root.removing = false; }
+        confirm(purge) => {
+            root.removing = false;
+            root.remove(root.app.id, purge);
+        }
+    }
+}
+
+// Another app, offered in the install window: its icon, name and pitch. Opens its page.
+component MoreRow inherits Rectangle {
+    in property <CardData> data;
+    callback clicked;
+    height: 54px;
+    background: touch.has-hover ? Theme.surface : transparent;
+    accessible-role: button;
+    accessible-label: data.name;
+    accessible-description: data.pitch + ". " + data.status;
+    accessible-action-default => { self.clicked(); }
+    forward-focus: focus;
+    HorizontalLayout {
+        padding-left: 6px;
+        padding-right: 6px;
+        spacing: 12px;
+        VerticalLayout {
+            alignment: center;
+            Tile { size: 34px; initial: root.data.initial; tint: root.data.tint; icon: root.data.icon; has-icon: root.data.has-icon; }
+        }
+        VerticalLayout {
+            alignment: center;
+            HorizontalLayout {
+                spacing: 10px;
+                Heading {
+                    text: root.data.name.to-uppercase();
+                    color: root.data.action != Action.none ? Theme.text : Theme.muted;
+                    font-size: 21px;
+                    horizontal-stretch: 0;
+                }
+                Mono {
+                    text: root.data.status.to-uppercase();
+                    horizontal-alignment: right;
+                    vertical-alignment: center;
+                    overflow: elide;
+                    horizontal-stretch: 1;
+                }
+            }
+            Text { text: root.data.pitch; color: Theme.muted; font-size: 12px; overflow: elide; }
+        }
+    }
+    Rectangle { y: parent.height - 1px; height: 1px; background: Theme.border; }
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    focus := Focus {
+        outset: -2px;
+        activate => { root.clicked(); }
+    }
+}
+
+// `stockroom install <app> --ui`: one app's install, then Open. Sibling apps hand installs to
+// Stockroom with it (PLAN.md §2), and a copy named after an app opens on it.
+export component InstallWindow inherits Window {
+    in property <string> product: "Stockroom";
+    in property <length> title-bar;
+    in property <string> name;
+    // "AMZ-01", or empty.
+    in property <string> part;
+    in property <string> initial;
+    in property <int> tint;
+    in property <image> app-icon;
+    in property <bool> has-icon;
+    // "Installing Specular", "Specular is installed", ...
+    in property <string> heading;
+    in property <string> stage;
+    in property <float> fraction: -1;
+    in property <string> detail;
+    // 0 working, 1 done, 2 failed, 3 handed to a store
+    in property <int> state;
+    in property <string> message;
+    in property <string> error-detail;
+    // A few of the other apps, to look at while this one installs.
+    in property <[CardData]> more;
+    callback open();
+    callback retry();
+    callback dismiss();
+    // Open the app window on this app's page, or on all of them.
+    callback show-app(string);
+    callback show-all();
+    title: root.product;
+    icon: @image-url("../../../packaging/icons/stockroom-48.png");
+    preferred-width: 460px;
+    min-width: 380px;
+    min-height: col.min-height;
+    background: Theme.bg;
+    default-font-family: Theme.body-font;
+    default-font-size: 14px;
+    col := VerticalLayout {
+        alignment: start;
+        padding-top: root.title-bar;
+        Rectangle {
+            height: 58px;
+            HorizontalLayout {
+                padding-left: 22px;
+                padding-right: 22px;
+                padding-bottom: 10px;
+                Wordmark { size: 13px; }
+                Mono {
+                    text: root.part != "" ? root.part : root.product.to-uppercase();
+                    color: root.part != "" ? Theme.accent : Theme.muted;
+                    horizontal-alignment: right;
+                    vertical-alignment: center;
+                    horizontal-stretch: 1;
+                }
+            }
+            Ruler { x: 22px; y: parent.height - 10px; width: parent.width - 44px; }
+        }
+        VerticalLayout {
+            padding: 22px;
+            padding-top: 16px;
+            spacing: 18px;
+            HorizontalLayout {
+                spacing: 16px;
+                VerticalLayout {
+                    alignment: start;
+                    padding-top: 2px;
+                    Tile { size: 56px; initial: root.initial; tint: root.tint; icon: root.app-icon; has-icon: root.has-icon; }
+                }
+                VerticalLayout {
+                    spacing: 4px;
+                    alignment: center;
+                    Heading {
+                        text: root.heading.to-uppercase();
+                        font-size: 32px;
+                        wrap: word-wrap;
+                    }
+                    if root.stage != "": Mono {
+                        text: root.stage.to-uppercase();
+                        color: root.state == 1 ? Theme.ok : Theme.muted;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+            if root.state == 0: VerticalLayout {
+                spacing: 6px;
+                ProgressBar { fraction: root.fraction; }
+                Mono { text: root.detail.to-uppercase(); }
+            }
+            if root.state == 2: Notice { text: root.message; detail: root.error-detail; tone: Tone.bad; }
+            if root.state == 3: Notice { text: root.message; tone: Tone.normal; }
+            if root.more.length > 0: VerticalLayout {
+                padding-top: 4px;
+                Rectangle { height: 1px; background: Theme.line; }
+                HorizontalLayout {
+                    padding-top: 8px;
+                    padding-bottom: 6px;
+                    Caption {
+                        text: @tr("MORE FROM THE FAMILY");
+                        vertical-alignment: center;
+                        horizontal-stretch: 1;
+                    }
+                    Link {
+                        text: @tr("All apps").to-uppercase();
+                        label: @tr("Show all apps");
+                        external: false;
+                        mono: true;
+                        clicked => { root.show-all(); }
+                    }
+                }
+                Rectangle { height: 1px; background: Theme.border; }
+                for item in root.more: MoreRow {
+                    data: item;
+                    clicked => { root.show-app(item.id); }
+                }
+            }
+            HorizontalLayout {
+                spacing: 10px;
+                alignment: end;
+                Button {
+                    text: root.state == 0 ? @tr("Hide") : @tr("Close");
+                    clicked => { root.dismiss(); }
+                }
+                if root.state == 2: Button {
+                    text: @tr("Try again");
+                    primary: true;
+                    clicked => { root.retry(); }
+                }
+                if root.state == 1: Button {
+                    text: @tr("Open");
+                    label: @tr("Open {}", root.name);
+                    primary: true;
+                    clicked => { root.open(); }
+                }
+            }
+        }
+    }
+}

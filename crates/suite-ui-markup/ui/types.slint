@@ -1,0 +1,123 @@
+// The data the windows show, filled from Rust (suite-ui's view models).
+
+import { Tone } from "controls.slint";
+
+// What a card's or page's main button does.
+export enum Action { none, install, open, update, store, website, busy }
+
+export struct CardData {
+    id: string,
+    // "AMZ-01"; the maker's name for an app from another maker; empty before it has one.
+    part: string,
+    name: string,
+    pitch: string,
+    // "by Zynk" for apps not made by the family; empty otherwise.
+    vendor: string,
+    initial: string,
+    tint: int,
+    icon: image,
+    has-icon: bool,
+    // "Installed · 1.2.0", "Coming soon", "Installed by Flatpak", a requirement problem.
+    status: string,
+    tone: Tone,
+    action: Action,
+    action-text: string,
+    // Below 0: no job; 0–1 while a job runs.
+    progress: float,
+}
+
+export struct UpdateItem {
+    id: string,
+    name: string,
+    // "1.1.0 → 1.2.0"
+    versions: string,
+}
+
+export struct Fact {
+    label: string,
+    value: string,
+}
+
+export struct ReqLine {
+    text: string,
+    ok: bool,
+}
+
+export struct OtherInstall {
+    // "Installed by Flatpak · 1.2.0"
+    text: string,
+    // "Updates come from Flatpak."
+    note: string,
+    can-open: bool,
+}
+
+export struct PhoneCode {
+    // "Android", "iPhone"
+    label: string,
+    code: image,
+    url: string,
+}
+
+export struct PageData {
+    id: string,
+    part: string,
+    name: string,
+    pitch: string,
+    vendor: string,
+    description: string,
+    initial: string,
+    tint: int,
+    icon: image,
+    has-icon: bool,
+    status: string,
+    tone: Tone,
+    action: Action,
+    action-text: string,
+    progress: float,
+    stage: string,
+    facts: [Fact],
+    reqs: [ReqLine],
+    // A plain sentence when this computer can't run the app.
+    problem: string,
+    notes-url: string,
+    homepage: string,
+    // Installed by Stockroom: channel, policy, rollback and remove apply.
+    managed: bool,
+    channel: int,
+    can-beta: bool,
+    policy: int,
+    // "Go back to 1.1.0", or empty.
+    rollback: string,
+    has-data: bool,
+    // "Get it from the Microsoft Store": the store installs and updates it.
+    store-note: string,
+    others: [OtherInstall],
+    phones: [PhoneCode],
+}
+
+export struct JobData {
+    id: int,
+    app: string,
+    initial: string,
+    tint: int,
+    // "Installing Specular"
+    title: string,
+    // "Downloading", "Unpacking", ...
+    stage: string,
+    // 0–1, or below 0 when the size isn't known.
+    fraction: float,
+    // "12 MB of 48 MB · 5.2 MB/s · 7 s left"
+    detail: string,
+    // 0 queued, 1 running, 2 done, 3 failed
+    state: int,
+    message: string,
+    error-detail: string,
+    can-open: bool,
+    can-retry: bool,
+}
+
+export struct LogData {
+    when: string,
+    text: string,
+    tone: Tone,
+}

@@ -1,0 +1,297 @@
+// Home: the catalogue's index. Updates at the top when there are any, the family's apps
+// as numbered parts in ruled rows, "Install all", then apps from other makers.
+
+import { ScrollView } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+import { Focus } from "focus.slint";
+import { Tone, Ui, Tile, Button, Caption, Mono, Heading, ProgressBar, Notice, Icons, Dot } from "controls.slint";
+import { CardData, UpdateItem, Action } from "types.slint";
+
+// One part: number, icon, name over its pitch, status, action. Opens the data sheet.
+export component Card inherits Rectangle {
+    in property <CardData> data;
+    // Too narrow for a status column: the status goes under the pitch.
+    in property <bool> narrow;
+    callback open-page(string);
+    callback act(string);
+    // Out, and for this computer: a full line. One still in the workshop, or made for
+    // another system, gets a short one.
+    property <bool> out: root.data.action != Action.none;
+    height: (root.out ? 100px : 62px) + (root.narrow ? 14px : 0px);
+    background: touch.has-hover ? Theme.surface : transparent;
+    accessible-role: button;
+    accessible-label: data.name;
+    accessible-description: data.pitch + ". " + data.status;
+    accessible-action-default => { open-page(data.id); }
+    forward-focus: focus;
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.open-page(root.data.id); }
+    }
+    focus := Focus {
+        outset: -2px;
+        activate => { root.open-page(root.data.id); }
+    }
+    HorizontalLayout {
+        padding-left: 8px;
+        padding-right: 8px;
+        spacing: 16px;
+        if !root.narrow: Mono {
+            text: root.data.part;
+            color: root.out ? Theme.accent : Theme.muted;
+            width: 64px;
+            vertical-alignment: center;
+            overflow: elide;
+        }
+        Rectangle {
+            width: 56px;
+            Tile {
+                x: 0;
+                size: root.out ? 56px : 34px;
+                initial: root.data.initial;
+                tint: root.data.tint;
+                icon: root.data.icon;
+                has-icon: root.data.has-icon;
+            }
+        }
+        VerticalLayout {
+            alignment: center;
+            horizontal-stretch: 1;
+            Heading {
+                text: root.data.name.to-uppercase();
+                color: root.out ? Theme.text : Theme.muted;
+                font-size: root.out ? 40px : 22px;
+                overflow: elide;
+            }
+            Text {
+                text: root.data.pitch;
+                color: root.out ? Theme.soft-text : Theme.muted;
+                font-size: root.out ? 14px : 12px;
+                overflow: elide;
+            }
+            if root.narrow: Mono {
+                text: root.data.status.to-uppercase();
+                color: Ui.tone(root.data.tone);
+                overflow: elide;
+            }
+        }
+        if !root.narrow: HorizontalLayout {
+            width: 216px;
+            spacing: 9px;
+            VerticalLayout {
+                alignment: center;
+                Dot {
+                    tint: !root.out ? transparent
+                        : root.data.tone == Tone.muted || root.data.tone == Tone.accent ? Theme.signal
+                        : Ui.tone(root.data.tone);
+                }
+            }
+            Mono {
+                text: root.data.status.to-uppercase();
+                color: root.data.tone == Tone.muted && root.out ? Theme.text : Ui.tone(root.data.tone);
+                wrap: word-wrap;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+        }
+        VerticalLayout {
+            alignment: center;
+            width: root.narrow ? 112px : 128px;
+            if root.data.action != Action.none && root.data.action != Action.busy: Button {
+                text: root.data.action-text;
+                label: root.data.action-text + " " + root.data.name;
+                primary: root.data.action == Action.install || root.data.action == Action.update;
+                icon: root.data.action == Action.store ? Icons.store : root.data.action == Action.website ? Icons.link : "";
+                clicked => { root.act(root.data.id); }
+            }
+        }
+    }
+    // The row's rule; while a job runs, its gauge.
+    Rectangle { y: parent.height - 1px; height: 1px; background: Theme.border; }
+    if root.data.progress >= 0: ProgressBar {
+        y: parent.height - 7px;
+        fraction: root.data.progress;
+    }
+}
+
+// The index: a heading row, then the parts.
+export component CardGrid inherits VerticalLayout {
+    in property <[CardData]> cards;
+    in property <bool> narrow;
+    // The line naming the columns.
+    in property <bool> head: true;
+    callback open-page(string);
+    callback act(string);
+    if root.head && !root.narrow: Rectangle {
+        height: 30px;
+        HorizontalLayout {
+            padding-left: 8px;
+            padding-right: 8px;
+            spacing: 16px;
+            Mono { text: @tr("PART"); width: 64px; vertical-alignment: center; }
+            Mono { text: @tr("NAME"); vertical-alignment: center; horizontal-stretch: 1; }
+            Mono { text: @tr("STATUS"); width: 216px; vertical-alignment: center; }
+            Rectangle { width: root.narrow ? 112px : 128px; }
+        }
+        Rectangle { y: parent.height - 1px; height: 1px; background: Theme.border; }
+    }
+    for card in root.cards: Card {
+        data: card;
+        narrow: root.narrow;
+        open-page(id) => { root.open-page(id); }
+        act(id) => { root.act(id); }
+    }
+}
+
+// Updates that are ready: a band with a signal bar.
+component UpdatesStrip inherits Rectangle {
+    in property <[UpdateItem]> updates;
+    in property <string> title;
+    callback update-all();
+    callback open-page(string);
+    background: Theme.surface;
+    min-height: col.preferred-height;
+    accessible-role: groupbox;
+    accessible-label: root.title;
+    Rectangle { x: 0; width: 3px; background: Theme.signal; }
+    col := VerticalLayout {
+        padding: 16px;
+        padding-left: 19px;
+        spacing: 12px;
+        HorizontalLayout {
+            spacing: 12px;
+            Heading {
+                text: root.title.to-uppercase();
+                font-size: 26px;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+                overflow: elide;
+            }
+            VerticalLayout {
+                alignment: center;
+                Button {
+                    text: @tr("Update all");
+                    primary: true;
+                    clicked => { root.update-all(); }
+                }
+            }
+        }
+        HorizontalLayout {
+            spacing: 8px;
+            alignment: start;
+            for u in root.updates: Rectangle {
+                height: 28px;
+                min-width: chip.preferred-width + 12px;
+                border-width: 1px;
+                border-color: chip-touch.has-hover ? Theme.line : Theme.border;
+                accessible-role: button;
+                accessible-label: u.name;
+                accessible-description: u.versions;
+                accessible-action-default => { root.open-page(u.id); }
+                chip := HorizontalLayout {
+                    padding-left: 12px;
+                    spacing: 10px;
+                    Text { text: u.name; color: Theme.text; font-size: 12px; font-weight: 600; vertical-alignment: center; }
+                    Mono { text: u.versions; vertical-alignment: center; }
+                }
+                chip-touch := TouchArea {
+                    mouse-cursor: pointer;
+                    clicked => { root.open-page(u.id); }
+                }
+                Focus {
+                    outset: 3px;
+                    activate => { root.open-page(u.id); }
+                }
+            }
+        }
+    }
+}
+
+export component HomePage inherits Rectangle {
+    in property <[CardData]> family;
+    in property <[CardData]> others;
+    in property <[UpdateItem]> updates;
+    in property <string> updates-title;
+    // "Install all (3)", or empty when there's nothing to install.
+    in property <string> install-all;
+    // "IN STOCK: 02", how many of the family's apps are out.
+    in property <string> stock;
+    in property <bool> loading;
+    in property <string> problem;
+    in property <string> problem-detail;
+    callback open-page(string);
+    callback act(string);
+    callback install-all-clicked();
+    callback update-all();
+    property <bool> narrow: root.width < 820px;
+    ScrollView {
+        VerticalLayout {
+            padding: Theme.pad;
+            padding-top: 22px;
+            spacing: 22px;
+            alignment: start;
+            if root.problem != "": Notice {
+                text: root.problem;
+                detail: root.problem-detail;
+                tone: Tone.warn;
+            }
+            if root.updates.length > 0: UpdatesStrip {
+                updates: root.updates;
+                title: root.updates-title;
+                update-all => { root.update-all(); }
+                open-page(id) => { root.open-page(id); }
+            }
+            VerticalLayout {
+                // The section's head: its line, then the headline over an ink rule.
+                Mono { text: @tr("Small, fast, private apps that work well together.").to-uppercase(); wrap: word-wrap; }
+                HorizontalLayout {
+                    spacing: 16px;
+                    padding-top: 4px;
+                    padding-bottom: 6px;
+                    Heading {
+                        text: @tr("The family").to-uppercase();
+                        font-size: root.narrow ? 44px : 64px;
+                        horizontal-stretch: 1;
+                        overflow: elide;
+                    }
+                    VerticalLayout {
+                        alignment: end;
+                        padding-bottom: 10px;
+                        spacing: 10px;
+                        if root.stock != "": Mono { text: root.stock; horizontal-alignment: right; }
+                        if root.install-all != "": Button {
+                            text: root.install-all;
+                            primary: true;
+                            clicked => { root.install-all-clicked(); }
+                        }
+                    }
+                }
+                Rectangle { height: 1px; background: Theme.line; }
+                if root.loading && root.family.length == 0: Mono {
+                    height: 56px;
+                    text: @tr("Loading the apps…").to-uppercase();
+                    vertical-alignment: center;
+                }
+                CardGrid {
+                    cards: root.family;
+                    narrow: root.narrow;
+                    open-page(id) => { root.open-page(id); }
+                    act(id) => { root.act(id); }
+                }
+            }
+            if root.others.length > 0: VerticalLayout {
+                padding-top: 14px;
+                Heading { text: @tr("FROM OTHER MAKERS"); font-size: 30px; }
+                Rectangle { height: 6px; }
+                Rectangle { height: 1px; background: Theme.line; }
+                CardGrid {
+                    cards: root.others;
+                    narrow: root.narrow;
+                    head: false;
+                    open-page(id) => { root.open-page(id); }
+                    act(id) => { root.act(id); }
+                }
+            }
+        }
+    }
+}

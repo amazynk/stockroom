@@ -1,0 +1,36 @@
+# Dozed: freezes backgrounded desktop apps on Linux. It has no packaged release: it is built
+# from a checkout and set up by its own script (packaging/install.sh), which also installs
+# the compositor helper and the systemd user unit. So Stockroom lists it and opens its page,
+# which has the steps; it doesn't install it. Wording follows Dozed's README.
+id = "dozed"
+name = "Dozed"
+pitch = "Freeze background apps so they stop waking the CPU"
+description = "Freezes backgrounded desktop applications so they stop waking the CPU, and thaws them the instant you switch back. Free and open source, for Linux. Unprivileged, and dry-run by default."
+homepage = "https://amazynk.com/dozed/"
+license = "MIT"
+category = "System"
+status = "available"
+github = "amazynk/dozed"
+icon = "dozed.png"
+part = "AMZ-02"
+order = 2
+
+[ids]
+desktop = "dozed-gui"
+executables = ["dozed"]
+
+# Its own `install.sh --uninstall` removes what it installed and leaves the config and the
+# recorded sessions alone; Stockroom doesn't manage either.
+[data_paths]
+
+[[assets]]
+os = "linux"
+arch = "x86_64"
+kind = "store"
+store = { store = "website", product_id = "dozed", url = "https://amazynk.com/dozed/", link = "https://amazynk.com/dozed/#install" }
+
+[[assets]]
+os = "linux"
+arch = "aarch64"
+kind = "store"
+store = { store = "website", product_id = "dozed", url = "https://amazynk.com/dozed/", link = "https://amazynk.com/dozed/#install" }

@@ -1,0 +1,63 @@
+[graph]
+all-features = true
+# The platforms Stockroom ships on; keeps other targets' TLS stacks out of the checks.
+targets = ["x86_64-unknown-linux-gnu", "aarch64-unknown-linux-gnu", "x86_64-pc-windows-msvc", "aarch64-pc-windows-msvc", "x86_64-apple-darwin", "aarch64-apple-darwin"]
+
+[advisories]
+version = 2
+yanked = "deny"
+# Unmaintained, not vulnerable (NetworkManager's metered flag over zbus). Revisit on each
+# zbus upgrade.
+ignore = [
+    { id = "RUSTSEC-2026-0370", reason = "zvariant via zbus (metered network)" },
+    { id = "RUSTSEC-2026-0371", reason = "zbus_names via zbus (metered network)" },
+    { id = "RUSTSEC-2026-0372", reason = "zvariant_derive via zbus (metered network)" },
+    # Unmaintained, not vulnerable, inside Slint. Revisit on each Slint upgrade.
+    { id = "RUSTSEC-2026-0441", reason = "pin-utils via slint-macros (build time)" },
+    { id = "RUSTSEC-2026-0192", reason = "ttf-parser via Slint text shaping and winit's decorations" },
+]
+
+[licenses]
+version = 2
+confidence-threshold = 0.9
+unused-allowed-license = "allow"
+allow = [
+    "GPL-3.0-or-later",
+    # Slint is used under GPLv3; the combined binary is GPLv3.
+    "GPL-3.0-only",
+    # interprocess (the single-instance socket); public-domain-like.
+    "0BSD",
+    "BSL-1.0",
+    "Unlicense",
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Zlib",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "CDLA-Permissive-2.0",
+]
+
+[licenses.private]
+ignore = true
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+allow-wildcard-paths = true
+# TLS is rustls on Linux and the OS's own stack (SChannel, Security.framework) on Windows
+# and macOS; never OpenSSL. cargo-deny unifies features across all targets, so it sees
+# native-tls's OpenSSL backend (used on other Unixes) although no shipped target builds it:
+# `cargo tree -i openssl-sys --target <triple>` is empty for every triple above. The
+# wrappers keep any other path to OpenSSL banned.
+deny = [
+    { crate = "openssl", reason = "no OpenSSL", wrappers = ["native-tls"] },
+    { crate = "openssl-sys", reason = "no OpenSSL", wrappers = ["openssl", "native-tls"] },
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

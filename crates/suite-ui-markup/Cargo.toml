@@ -1,0 +1,20 @@
+[package]
+name = "suite-ui-markup"
+description = "Stockroom's .slint markup, compiled to Rust bindings, and its bundled translations"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+slint.workspace = true
+
+[build-dependencies]
+slint-build.workspace = true
+
+# Not `workspace = true`: the Slint compiler emits `unsafe` vtables, so this crate holds
+# generated code only; handwritten code lives in suite-ui,
+# which forbids `unsafe`.
+[lints.rust]
+missing_debug_implementations = "allow"
+unreachable_pub = "allow"

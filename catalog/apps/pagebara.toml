@@ -1,0 +1,26 @@
+# Pagebara: the PDF viewer and editor with its own engine. Its source is public and it has
+# no release yet, so it is listed as coming and nothing is installed. Names and IDs are
+# Pagebara's own (`crates/support/identity` in its source); wording follows its README.
+id = "pagebara"
+name = "Pagebara"
+pitch = "Fast, private PDF viewer and editor"
+description = "Read, search, annotate, fill in, sign, redact and reorganise PDF files, on its own engine in safe Rust. Your documents stay on your device: no account, no cloud, no telemetry."
+homepage = "https://amazynk.com/pagebara/"
+license = "MIT OR Apache-2.0"
+category = "Office"
+status = "unreleased"
+github = "amazynk/pagebara"
+icon = "pagebara.png"
+part = "AMZ-03"
+order = 3
+
+# The MSI's uninstall key is its product code, which is not fixed yet.
+[ids]
+desktop = "com.amazynk.Pagebara"
+flatpak = "com.amazynk.Pagebara"
+macos_bundle = "com.amazynk.Pagebara"
+executables = ["pagebara"]
+
+# Settings and data folders are not listed until the first release, so
+# `stockroom remove --purge` removes nothing extra for Pagebara yet.
+[data_paths]

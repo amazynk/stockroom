@@ -1,0 +1,114 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+exclude = ["fuzz"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-or-later"
+publish = false
+
+[workspace.dependencies]
+suite-catalog = { path = "crates/suite-catalog" }
+suite-core = { path = "crates/suite-core" }
+suite-detect = { path = "crates/suite-detect" }
+suite-fetch = { path = "crates/suite-fetch" }
+suite-identity = { path = "crates/suite-identity" }
+suite-install = { path = "crates/suite-install" }
+suite-platform = { path = "crates/suite-platform" }
+suite-testkit = { path = "crates/suite-testkit" }
+suite-ui = { path = "crates/suite-ui", default-features = false }
+suite-ui-markup = { path = "crates/suite-ui-markup" }
+suite-unpack = { path = "crates/suite-unpack" }
+
+# A user-initiated activity while the window installs, so App Nap doesn't slow it (macOS);
+# block2 and objc2-foundation already come with winit. MIT.
+block2 = "0.6.2"
+clap = { version = "4.6.7", features = ["derive"] }
+directories = "6"
+# The Windows resources of stockroom.exe (icon, version, manifest), compiled with the platform's
+# resource compiler (rc.exe, llvm-rc or windres); a build dependency only, MIT.
+embed-resource = "3.0.12"
+flate2 = "1.1.11"
+# Slint's headless backend and element queries, for the accessibility tests; versioned with Slint.
+i-slint-backend-testing = "=1.18.1"
+# The single-instance socket: a Unix domain socket, or a named pipe on Windows (no tokio).
+interprocess = "2.4.8"
+# Start-menu shortcuts: a pure-Rust .lnk writer, no COM.
+mslnk = "0.1.8"
+# NSProcessInfo's activities (macOS), with block2 above.
+objc2-foundation = { version = "0.3.2", default-features = false, features = ["std", "NSProcessInfo", "NSString", "block2"] }
+plist = { version = "1.10.3", default-features = false }
+# Decodes catalog icons and encodes the demo's window snapshots; pure Rust.
+png = "0.18.1"
+# "Get it on your phone" codes; pure Rust, no image crate.
+qrcode = { version = "0.14.1", default-features = false }
+semver = { version = "1.0.28", features = ["serde"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+sha2 = "0.11.1"
+# The UI, as in the rest of the family: the femtovg renderer on wgpu (suite-ui's `gpu`
+# feature, on by default), with Slint's software renderer where there's no GPU
+# (`STOCKROOM_RENDERER=software`). winit access raises the window; wgpu access shares one device.
+# `software-renderer-path` draws the icons in software too.
+slint = { version = "1.18.1", default-features = false, features = ["std", "compat-1-18", "backend-winit", "renderer-software", "software-renderer-path", "accessibility", "unstable-winit-030"] }
+slint-build = "1.18.1"
+# The system language, as Slint itself reads it.
+sys-locale = "0.3.2"
+sysinfo = { version = "0.39.6", default-features = false, features = ["system"] }
+tar = { version = "0.4.46", default-features = false }
+tempfile = "3.27.0"
+thiserror = "2.0.21"
+time = { version = "0.3.55", features = ["formatting", "parsing", "macros"] }
+toml = { version = "1.1.8", default-features = false, features = ["parse", "serde", "std"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+# HTTP: ureq, not reqwest or hyper. Stockroom makes a handful of sequential GETs (the catalog,
+# then one asset at a time), so a blocking client avoids a tokio runtime and keeps the binary
+# and cold start small. TLS never uses OpenSSL: rustls with the platform verifier on Linux;
+# the OS's own TLS (SChannel, Security.framework) on Windows and macOS, which honours the OS
+# trust store and needs no C toolchain to cross-check. Features are set per target in
+# suite-fetch.
+ureq = { version = "3.5.2", default-features = false }
+url = "2.5"
+winreg = "0.56.0"
+zbus = { version = "5.19.0", default-features = false, features = ["async-io", "blocking-api"] }
+zip = { version = "9.6.0", default-features = false, features = ["deflate-flate2"] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_debug_implementations = "warn"
+unreachable_pub = "warn"
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+unwrap_used = "deny"
+expect_used = "deny"
+dbg_macro = "deny"
+todo = "deny"
+print_stdout = "warn"
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+strip = "symbols"
+debug = "line-tables-only"
+split-debuginfo = "packed"
+
+# The shipped binaries (`cargo build --profile dist`): size first, since the installer is a
+# download (PLAN.md §1: under 15 MB). Measured in PLAN.md §9, milestone 3.
+[profile.dist]
+inherits = "release"
+opt-level = "s"
+debug = false
+split-debuginfo = "off"
+strip = true
+
+[profile.dev.package."*"]
+opt-level = 2
+debug = false

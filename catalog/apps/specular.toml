@@ -1,0 +1,71 @@
+# Specular: the image viewer. Releases come from GitHub with a .sha256 next to every asset.
+id = "specular"
+name = "Specular"
+pitch = "Open and flip through large photos instantly"
+description = "A fast image viewer for photos, raw files, scientific and design formats. It opens huge images instantly and flips through folders without waiting."
+homepage = "https://amazynk.com/specular"
+license = "MIT OR Apache-2.0"
+category = "Graphics"
+status = "available"
+github = "amazynk/specular"
+icon = "specular.png"
+part = "AMZ-01"
+order = 1
+
+[ids]
+desktop = "app.specular.Specular"
+flatpak = "app.specular.Specular"
+macos_bundle = "app.specular.Specular"
+windows_uninstall_key = "Specular"
+executables = ["specular"]
+
+# Settings and data folders are not listed until confirmed with the app's code, so
+# `stockroom remove --purge` removes nothing extra for Specular yet.
+[data_paths]
+
+[[assets]]
+name = "specular-{version}-linux-x86_64.tar.gz"
+os = "linux"
+arch = "x86_64"
+kind = "tar.gz"
+requires = { x86_64_v3 = true, glibc = "2.35" }
+layout = { executable = "specular", icon = "share/icons/hicolor/scalable/apps/app.specular.Specular.svg", desktop = "share/applications/app.specular.Specular.desktop" }
+
+[[assets]]
+name = "Specular-{version}-x86_64.AppImage"
+os = "linux"
+arch = "x86_64"
+kind = "appimage"
+requires = { x86_64_v3 = true, glibc = "2.35" }
+
+[[assets]]
+name = "Specular-{version}-x86_64.flatpak"
+os = "linux"
+arch = "x86_64"
+kind = "flatpak-bundle"
+# The Flatpak runtime brings its own glibc; the CPU level still applies.
+requires = { x86_64_v3 = true }
+
+[[assets]]
+name = "Specular-{version}-windows-x64.zip"
+os = "windows"
+arch = "x86_64"
+kind = "zip"
+requires = { x86_64_v3 = true }
+layout = { executable = "specular.exe" }
+
+# Listed for completeness; Stockroom installs per user without admin rights, so it uses
+# the portable zip on Windows.
+[[assets]]
+name = "Specular-{version}-x64.msi"
+os = "windows"
+arch = "x86_64"
+kind = "msi"
+requires = { x86_64_v3 = true }
+
+[[assets]]
+name = "Specular-{version}-universal.dmg"
+os = "macos"
+arch = "universal"
+kind = "dmg"
+layout = { executable = "Specular.app" }

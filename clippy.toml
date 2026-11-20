@@ -1,0 +1,7 @@
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+disallowed-methods = [
+    { path = "std::boxed::Box::leak", reason = "leaks are never intended" },
+    { path = "std::mem::forget", reason = "resources must be released through Drop" },
+    { path = "std::process::exit", reason = "return from main so destructors flush state" },
+]

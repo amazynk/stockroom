@@ -1,0 +1,63 @@
+// The amazynk catalogue, as on amazynk.com: bone paper, ink, one signal orange, hairlines,
+// part numbers. Light is the hub's own palette; dark is the same sheet on ink. Every colour
+// the markup draws lives here; `tools/contrast.py` checks the text pairs.
+
+import { Palette } from "std-widgets.slint";
+
+export enum ThemeMode { system, dark, light }
+
+export global Theme {
+    // Set from Rust; `system` follows the OS and is dark when it doesn't say.
+    in property <ThemeMode> mode;
+    out property <bool> dark: mode == ThemeMode.dark || (mode == ThemeMode.system && Palette.color-scheme != ColorScheme.light);
+
+    // Paper. `surface` is a hovered row, a notice, a field; `raised` a hovered control.
+    out property <color> bg: dark ? #111111 : #EBE9E3;
+    out property <color> surface: dark ? #1D1D1C : #E1DED6;
+    out property <color> raised: dark ? #262625 : #DAD6CC;
+    out property <color> dialog: dark ? #161615 : #EBE9E3;
+    out property <color> scrim: dark ? #000000B3 : #11111166;
+
+    // Rules: `line` is the ink rule that opens a section and outlines a control, `border`
+    // the hairline between rows, `grid` the faint columns behind everything.
+    out property <color> line: dark ? #EBE9E3 : #111111;
+    out property <color> border: dark ? #55524D : #ADA9A0;
+    out property <color> grid: dark ? #1E1E1D : #DFDCD5;
+
+    // Ink.
+    out property <color> text: dark ? #EBE9E3 : #111111;
+    out property <color> soft-text: dark ? #E0DDD6 : #1E1D1B;
+    out property <color> muted: dark ? #C4C0B7 : #403D39;
+    out property <color> strong: dark ? #FFFFFF : #000000;
+
+    // Filled controls: ink on paper, and the other way round.
+    out property <color> ink: dark ? #EBE9E3 : #111111;
+    out property <color> on-ink: dark ? #111111 : #EBE9E3;
+
+    // Signal orange. `signal` is the site's, for fills, dots, arrows and the gauge needle;
+    // `accent` is the same hue as text, dark enough to read on paper.
+    out property <color> signal: #FF4D0A;
+    out property <color> on-signal: #111111;
+    out property <color> accent: dark ? #FF6B33 : #AD2F00;
+
+    out property <color> ok: dark ? #7FD6A4 : #1D6637;
+    out property <color> warn: dark ? #FFB45C : #824600;
+    out property <color> bad: dark ? #FF8478 : #AB2116;
+
+    // QR codes stay dark on white in both themes: phone cameras want contrast.
+    out property <color> paper: #FFFFFF;
+
+    // Archivo, three ways, and JetBrains Mono (`tools/make-fonts.py`).
+    out property <string> body-font: "Archivo";
+    out property <string> heading-font: "Archivo Condensed";
+    out property <string> mark-font: "Archivo Expanded";
+    out property <string> mono-font: "JetBrains Mono";
+
+    // The page margin, and the gap between a section's parts.
+    out property <length> pad: 32px;
+    out property <length> gap: 16px;
+
+    // Keyboard focus: an ink ring around whatever has it.
+    out property <color> focus: dark ? #EBE9E3 : #111111;
+    out property <length> focus-width: 2px;
+}

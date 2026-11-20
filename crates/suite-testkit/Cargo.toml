@@ -1,0 +1,20 @@
+[package]
+name = "suite-testkit"
+description = "Fake release server and archive builders (including malicious ones) for Stockroom tests"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+suite-catalog.workspace = true
+flate2.workspace = true
+semver.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+tar.workspace = true
+time.workspace = true
+zip.workspace = true
+
+[lints]
+workspace = true

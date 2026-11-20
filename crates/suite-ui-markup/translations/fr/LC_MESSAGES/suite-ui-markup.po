@@ -1,0 +1,839 @@
+# Stockroom user interface. See crates/suite-ui-markup/TRANSLATING.md.
+msgid ""
+msgstr ""
+"Project-Id-Version: stockroom\n"
+"PO-Revision-Date: 2026-11-15 00:00+0000\n"
+"Last-Translator: Stockroom contributors\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: crates/suite-ui-markup/ui/activity.slint:46
+#: crates/suite-ui-markup/ui/app.slint:535
+#: crates/suite-ui-markup/ui/page.slint:180 crates/suite-ui/src/view.rs:91
+msgid "Open"
+msgstr "Ouvrir"
+
+#: crates/suite-ui-markup/ui/activity.slint:47
+#: crates/suite-ui-markup/ui/app.slint:536
+#: crates/suite-ui-markup/ui/page.slint:181
+msgid "Open {}"
+msgstr "Ouvrir {}"
+
+#: crates/suite-ui-markup/ui/activity.slint:55
+#: crates/suite-ui-markup/ui/app.slint:530
+msgid "Try again"
+msgstr "Réessayer"
+
+#: crates/suite-ui-markup/ui/activity.slint:64
+msgid "Dismiss {}"
+msgstr "Masquer {}"
+
+#: crates/suite-ui-markup/ui/activity.slint:95
+#: crates/suite-ui-markup/ui/app.slint:254
+msgid "Activity"
+msgstr "Activité"
+
+#: crates/suite-ui-markup/ui/activity.slint:100
+msgid "Nothing is being installed or updated right now."
+msgstr "Rien n’est en cours d’installation ou de mise à jour."
+
+#: crates/suite-ui-markup/ui/activity.slint:112
+msgid "PAST CHANGES"
+msgstr "CHANGEMENTS PASSÉS"
+
+#: crates/suite-ui-markup/ui/activity.slint:117
+msgid "No changes yet."
+msgstr "Aucun changement pour l’instant."
+
+#: crates/suite-ui-markup/ui/app.slint:49
+msgid "{n} running"
+msgid_plural "{n} running"
+msgstr[0] "{n} en cours"
+msgstr[1] "{n} en cours"
+
+#: crates/suite-ui-markup/ui/app.slint:110
+#: crates/suite-ui-markup/ui/app.slint:115
+msgid "Remove {}?"
+msgstr "Supprimer {} ?"
+
+#: crates/suite-ui-markup/ui/app.slint:120
+msgid ""
+"Its program files, shortcuts and menu entries go. Your files stay where they "
+"are."
+msgstr ""
+"Ses fichiers de programme, raccourcis et entrées de menu sont supprimés. Vos "
+"fichiers restent où ils sont."
+
+#: crates/suite-ui-markup/ui/app.slint:127
+msgid "Also remove its settings and data"
+msgstr "Supprimer aussi ses réglages et données"
+
+#: crates/suite-ui-markup/ui/app.slint:134
+msgid "Cancel"
+msgstr "Annuler"
+
+#: crates/suite-ui-markup/ui/app.slint:138
+#: crates/suite-ui-markup/ui/page.slint:281
+msgid "Remove"
+msgstr "Supprimer"
+
+#: crates/suite-ui-markup/ui/app.slint:139
+#: crates/suite-ui-markup/ui/page.slint:282
+msgid "Remove {}"
+msgstr "Supprimer {}"
+
+#: crates/suite-ui-markup/ui/app.slint:249
+msgid "Apps"
+msgstr "Apps"
+
+#: crates/suite-ui-markup/ui/app.slint:260
+#: crates/suite-ui-markup/ui/settings.slint:59
+msgid "Settings"
+msgstr "Réglages"
+
+#: crates/suite-ui-markup/ui/app.slint:270
+msgid "Check for updates"
+msgstr "Rechercher des mises à jour"
+
+#: crates/suite-ui-markup/ui/app.slint:287
+msgid "Dismiss the message"
+msgstr "Fermer le message"
+
+#: crates/suite-ui-markup/ui/app.slint:504
+msgid "MORE FROM THE FAMILY"
+msgstr "AUTRES APPS DE LA FAMILLE"
+
+#: crates/suite-ui-markup/ui/app.slint:509
+#: crates/suite-ui-markup/ui/page.slint:49
+msgid "All apps"
+msgstr "Toutes les apps"
+
+#: crates/suite-ui-markup/ui/app.slint:510
+msgid "Show all apps"
+msgstr "Afficher toutes les apps"
+
+#: crates/suite-ui-markup/ui/app.slint:526
+msgid "Hide"
+msgstr "Masquer"
+
+#: crates/suite-ui-markup/ui/app.slint:526
+msgid "Close"
+msgstr "Fermer"
+
+#: crates/suite-ui-markup/ui/home.slint:131
+msgid "PART"
+msgstr "PIÈCE"
+
+#: crates/suite-ui-markup/ui/home.slint:132
+msgid "NAME"
+msgstr "NOM"
+
+#: crates/suite-ui-markup/ui/home.slint:133
+msgid "STATUS"
+msgstr "ÉTAT"
+
+#: crates/suite-ui-markup/ui/home.slint:173
+msgid "Update all"
+msgstr "Tout mettre à jour"
+
+#: crates/suite-ui-markup/ui/home.slint:246
+msgid "Small, fast, private apps that work well together."
+msgstr "Des apps petites, rapides et privées qui fonctionnent bien ensemble."
+
+#: crates/suite-ui-markup/ui/home.slint:252
+msgid "The family"
+msgstr "La famille"
+
+#: crates/suite-ui-markup/ui/home.slint:272
+msgid "Loading the apps…"
+msgstr "Chargement des apps…"
+
+#: crates/suite-ui-markup/ui/home.slint:284
+msgid "FROM OTHER MAKERS"
+msgstr "D’AUTRES ÉDITEURS"
+
+#: crates/suite-ui-markup/ui/page.slint:46
+msgid "Back to all apps"
+msgstr "Retour à toutes les apps"
+
+#: crates/suite-ui-markup/ui/page.slint:50
+msgid "DATA SHEET"
+msgstr "FICHE TECHNIQUE"
+
+#: crates/suite-ui-markup/ui/page.slint:135
+msgid "ABOUT"
+msgstr "À PROPOS"
+
+#: crates/suite-ui-markup/ui/page.slint:141
+msgid "Release notes"
+msgstr "Notes de version"
+
+#: crates/suite-ui-markup/ui/page.slint:145
+msgid "Website"
+msgstr "Site web"
+
+#: crates/suite-ui-markup/ui/page.slint:151
+msgid "REQUIREMENTS"
+msgstr "CONFIGURATION REQUISE"
+
+#: crates/suite-ui-markup/ui/page.slint:168
+msgid "ALSO ON THIS COMPUTER"
+msgstr "AUSSI SUR CET ORDINATEUR"
+
+#: crates/suite-ui-markup/ui/page.slint:188
+msgid "GET IT ON YOUR PHONE"
+msgstr "SUR VOTRE TÉLÉPHONE"
+
+#: crates/suite-ui-markup/ui/page.slint:190
+msgid "Point your phone's camera at a code."
+msgstr "Pointez l’appareil photo de votre téléphone vers un code."
+
+#: crates/suite-ui-markup/ui/page.slint:205
+msgid "Code for {}: {}"
+msgstr "Code pour {} : {}"
+
+#: crates/suite-ui-markup/ui/page.slint:242
+#: crates/suite-ui-markup/ui/settings.slint:62
+msgid "UPDATES"
+msgstr "MISES À JOUR"
+
+#: crates/suite-ui-markup/ui/page.slint:245
+#: crates/suite-ui-markup/ui/page.slint:249
+msgid "Channel"
+msgstr "Canal"
+
+#: crates/suite-ui-markup/ui/page.slint:250
+msgid "Stable"
+msgstr "Stable"
+
+#: crates/suite-ui-markup/ui/page.slint:250
+msgid "Beta"
+msgstr "Bêta"
+
+#: crates/suite-ui-markup/ui/page.slint:258
+#: crates/suite-ui-markup/ui/page.slint:262
+msgid "New versions"
+msgstr "Nouvelles versions"
+
+#: crates/suite-ui-markup/ui/page.slint:263 crates/suite-ui/src/view.rs:90
+msgid "Install"
+msgstr "Installer"
+
+#: crates/suite-ui-markup/ui/page.slint:263
+msgid "Ask first"
+msgstr "Demander"
+
+#: crates/suite-ui-markup/ui/page.slint:263
+msgid "Never"
+msgstr "Jamais"
+
+#: crates/suite-ui-markup/ui/page.slint:271
+msgid "MANAGE"
+msgstr "GÉRER"
+
+#: crates/suite-ui-markup/ui/settings.slint:64
+msgid "Update apps automatically"
+msgstr "Mettre à jour les apps automatiquement"
+
+#: crates/suite-ui-markup/ui/settings.slint:70
+msgid "Wait for an unmetered connection"
+msgstr "Attendre une connexion sans limite de données"
+
+#: crates/suite-ui-markup/ui/settings.slint:71
+msgid "Automatic updates skip mobile hotspots and other metered networks."
+msgstr ""
+"Les mises à jour automatiques évitent les partages de connexion mobile et "
+"autres réseaux limités."
+
+#: crates/suite-ui-markup/ui/settings.slint:78
+msgid "INSTALLS"
+msgstr "INSTALLATIONS"
+
+#: crates/suite-ui-markup/ui/settings.slint:80
+#: crates/suite-ui-markup/ui/settings.slint:85
+msgid "Install apps for"
+msgstr "Installer les apps pour"
+
+#: crates/suite-ui-markup/ui/settings.slint:82
+msgid "Installing for everyone asks for an administrator's password."
+msgstr "L’installation pour tous demande un mot de passe administrateur."
+
+#: crates/suite-ui-markup/ui/settings.slint:83
+msgid "Installing for everyone on this computer comes in a later version."
+msgstr ""
+"L’installation pour tous sur cet ordinateur arrivera dans une version "
+"ultérieure."
+
+#: crates/suite-ui-markup/ui/settings.slint:86
+msgid "Just me"
+msgstr "Moi seul"
+
+#: crates/suite-ui-markup/ui/settings.slint:86
+msgid "Everyone"
+msgstr "Tout le monde"
+
+#: crates/suite-ui-markup/ui/settings.slint:94
+msgid "APPEARANCE"
+msgstr "APPARENCE"
+
+#: crates/suite-ui-markup/ui/settings.slint:96
+#: crates/suite-ui-markup/ui/settings.slint:98
+msgid "Language"
+msgstr "Langue"
+
+#: crates/suite-ui-markup/ui/settings.slint:105
+#: crates/suite-ui-markup/ui/settings.slint:107
+msgid "Theme"
+msgstr "Thème"
+
+#: crates/suite-ui-markup/ui/settings.slint:108 crates/suite-ui/src/app.rs:953
+msgid "System"
+msgstr "Système"
+
+#: crates/suite-ui-markup/ui/settings.slint:108
+msgid "Light"
+msgstr "Clair"
+
+#: crates/suite-ui-markup/ui/settings.slint:108
+msgid "Dark"
+msgstr "Sombre"
+
+#: crates/suite-ui/src/app.rs:599
+msgid "That couldn't be opened."
+msgstr "Impossible de l’ouvrir."
+
+#: crates/suite-ui/src/app.rs:600
+msgid "That setting couldn't be changed."
+msgstr "Impossible de modifier ce réglage."
+
+#: crates/suite-ui/src/app.rs:945
+msgid "Checks once a day in the background, using {}."
+msgstr "Vérifie une fois par jour en arrière-plan, avec {}."
+
+#: crates/suite-ui/src/app.rs:948
+msgid "On, but not registered with {} yet."
+msgstr "Activé, mais pas encore inscrit dans {}."
+
+#: crates/suite-ui/src/app.rs:950
+msgid "Off: apps update only when you say so."
+msgstr "Désactivé : les apps ne se mettent à jour que quand vous le demandez."
+
+#: crates/suite-ui/src/compact.rs:110 crates/suite-ui/src/compact.rs:193
+#: crates/suite-ui/src/jobs.rs:205
+msgid "Installing {}"
+msgstr "Installation de {}"
+
+#: crates/suite-ui/src/compact.rs:111
+msgid "Getting the app list"
+msgstr "Récupération de la liste des apps"
+
+#: crates/suite-ui/src/compact.rs:163 crates/suite-ui/src/compact.rs:208
+#: crates/suite-ui/src/jobs.rs:201
+msgid "{} wasn't installed"
+msgstr "{} n’a pas été installé"
+
+#: crates/suite-ui/src/format.rs:55
+msgid "{} s"
+msgstr "{} s"
+
+#: crates/suite-ui/src/format.rs:56
+msgid "{} min"
+msgstr "{} min"
+
+#: crates/suite-ui/src/format.rs:57
+msgid "{} h"
+msgstr "{} h"
+
+#: crates/suite-ui/src/format.rs:73
+msgid "Today, {}"
+msgstr "Aujourd’hui, {}"
+
+#: crates/suite-ui/src/format.rs:74
+msgid "Yesterday, {}"
+msgstr "Hier, {}"
+
+#: crates/suite-ui/src/jobs.rs:178
+msgid "Waiting"
+msgstr "En attente"
+
+#: crates/suite-ui/src/jobs.rs:180
+msgid "Starting"
+msgstr "Démarrage"
+
+#: crates/suite-ui/src/jobs.rs:181
+msgid "Done"
+msgstr "Terminé"
+
+#: crates/suite-ui/src/jobs.rs:182
+msgid "Failed"
+msgstr "Échec"
+
+#: crates/suite-ui/src/jobs.rs:193
+msgid "{} is up to date"
+msgstr "{} est à jour"
+
+#: crates/suite-ui/src/jobs.rs:195 crates/suite-ui/src/jobs.rs:198
+msgid "Updated {} to {}"
+msgstr "{} mis à jour en {}"
+
+#: crates/suite-ui/src/jobs.rs:197 crates/suite-ui/src/view.rs:432
+msgid "Installed {} {}"
+msgstr "{} {} installé"
+
+#: crates/suite-ui/src/jobs.rs:199
+msgid "{} is back on {}"
+msgstr "{} est revenu à {}"
+
+#: crates/suite-ui/src/jobs.rs:200
+msgid "Removed {}"
+msgstr "{} supprimé"
+
+#: crates/suite-ui/src/jobs.rs:202
+msgid "{} wasn't updated"
+msgstr "{} n’a pas été mis à jour"
+
+#: crates/suite-ui/src/jobs.rs:203
+msgid "{} wasn't removed"
+msgstr "{} n’a pas été supprimé"
+
+#: crates/suite-ui/src/jobs.rs:204
+msgid "{} didn't go back"
+msgstr "{} n’est pas revenu en arrière"
+
+#: crates/suite-ui/src/jobs.rs:206
+msgid "Updating {}"
+msgstr "Mise à jour de {}"
+
+#: crates/suite-ui/src/jobs.rs:207
+msgid "Removing {}"
+msgstr "Suppression de {}"
+
+#: crates/suite-ui/src/jobs.rs:208
+msgid "Going back to the previous {}"
+msgstr "Retour à la version précédente de {}"
+
+#: crates/suite-ui/src/jobs.rs:219
+msgid "{} of {}"
+msgstr "{} sur {}"
+
+#: crates/suite-ui/src/jobs.rs:224
+msgid "waiting for the server"
+msgstr "en attente du serveur"
+
+#: crates/suite-ui/src/jobs.rs:229
+msgid "{} left"
+msgstr "encore {}"
+
+#: crates/suite-ui/src/jobs.rs:247
+msgid "{} is open: the new version starts next time you open it"
+msgstr "{} est ouvert : la nouvelle version démarrera à sa prochaine ouverture"
+
+#: crates/suite-ui/src/view.rs:92
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: crates/suite-ui/src/view.rs:93
+msgid "Get it"
+msgstr "Obtenir"
+
+#: crates/suite-ui/src/view.rs:116 crates/suite-ui/src/view.rs:148
+msgid "Coming soon"
+msgstr "Bientôt disponible"
+
+#: crates/suite-ui/src/view.rs:121
+msgid "Installed {} · {} is ready"
+msgstr "{} installée · {} est prête"
+
+#: crates/suite-ui/src/view.rs:124
+msgid "Installed · {}"
+msgstr "Installée · {}"
+
+#: crates/suite-ui/src/view.rs:135
+msgid "Version {} · {}"
+msgstr "Version {} · {}"
+
+#: crates/suite-ui/src/view.rs:136
+msgid "Version {}"
+msgstr "Version {}"
+
+#: crates/suite-ui/src/view.rs:154
+msgid "No stable version yet"
+msgstr "Pas encore de version stable"
+
+#: crates/suite-ui/src/view.rs:155
+msgid "No beta version yet"
+msgstr "Pas encore de version bêta"
+
+#: crates/suite-ui/src/view.rs:196
+msgid "by {}"
+msgstr "par {}"
+
+#: crates/suite-ui/src/view.rs:242
+msgid "IN STOCK: {}"
+msgstr "EN STOCK : {}"
+
+#: crates/suite-ui/src/view.rs:245
+msgid "{n} update is ready"
+msgid_plural "{n} updates are ready"
+msgstr[0] "{n} mise à jour prête"
+msgstr[1] "{n} mises à jour prêtes"
+
+#: crates/suite-ui/src/view.rs:248
+msgid "Install all ({})"
+msgstr "Tout installer ({})"
+
+#: crates/suite-ui/src/view.rs:322
+msgid "Installed"
+msgstr "Installée"
+
+#: crates/suite-ui/src/view.rs:324
+msgid "Newest"
+msgstr "Plus récente"
+
+#: crates/suite-ui/src/view.rs:326
+msgid "Since"
+msgstr "Depuis"
+
+#: crates/suite-ui/src/view.rs:329
+msgid "Version"
+msgstr "Version"
+
+#: crates/suite-ui/src/view.rs:333
+msgid "Download"
+msgstr "Téléchargement"
+
+#: crates/suite-ui/src/view.rs:336
+msgid "Released"
+msgstr "Publiée"
+
+#: crates/suite-ui/src/view.rs:341
+msgid "Licence"
+msgstr "Licence"
+
+#: crates/suite-ui/src/view.rs:344
+msgid "Part"
+msgstr "Pièce"
+
+#: crates/suite-ui/src/view.rs:347
+msgid "Made by"
+msgstr "Éditeur"
+
+#: crates/suite-ui/src/view.rs:355
+msgid "{} can't run on this computer."
+msgstr "{} ne peut pas fonctionner sur cet ordinateur."
+
+#: crates/suite-ui/src/view.rs:370
+msgid "Go back to {}"
+msgstr "Revenir à {}"
+
+#: crates/suite-ui/src/view.rs:380
+msgid "Its updates come from there; Stockroom leaves this copy alone."
+msgstr ""
+"Ses mises à jour viennent de là ; Stockroom ne touche pas à cette copie."
+
+#: crates/suite-ui/src/view.rs:395
+msgid "Made for {}, which this computer runs"
+msgstr "Conçue pour {}, qu’utilise cet ordinateur"
+
+#: crates/suite-ui/src/view.rs:399
+msgid "A processor with AVX2"
+msgstr "Un processeur avec AVX2"
+
+#: crates/suite-ui/src/view.rs:403
+msgid "glibc {} or later"
+msgstr "glibc {} ou plus récent"
+
+#: crates/suite-ui/src/view.rs:407
+msgid "macOS {} or later"
+msgstr "macOS {} ou plus récent"
+
+#: crates/suite-ui/src/view.rs:411
+msgid "Windows build {} or later"
+msgstr "Windows build {} ou plus récent"
+
+#: crates/suite-ui/src/view.rs:434
+msgid "Updated {} from {} to {}"
+msgstr "{} mis à jour de {} vers {}"
+
+#: crates/suite-ui/src/view.rs:437
+msgid "Took {} back from {} to {}"
+msgstr "{} ramené de {} à {}"
+
+#: crates/suite-ui/src/view.rs:440
+msgid "Removed {} {}"
+msgstr "{} {} supprimé"
+
+#: crates/suite-ui/src/view.rs:443
+msgid "Removed {} {} with its settings and data"
+msgstr "{} {} supprimé avec ses réglages et données"
+
+#: crates/suite-ui/src/words.rs:21
+msgid "any"
+msgstr "de tout type"
+
+#: crates/suite-ui/src/words.rs:28
+msgid "Made for {}"
+msgstr "Conçue pour {}"
+
+#: crates/suite-ui/src/words.rs:29
+msgid "Made for {} processors"
+msgstr "Conçue pour les processeurs {}"
+
+#: crates/suite-ui/src/words.rs:30
+msgid "Needs a processor with AVX2 (most from 2013 or later)"
+msgstr "Nécessite un processeur avec AVX2 (la plupart depuis 2013)"
+
+#: crates/suite-ui/src/words.rs:32
+msgid "Needs a newer Linux: glibc {} or later (this one has {})"
+msgstr ""
+"Nécessite un Linux plus récent : glibc {} ou plus récent (celui-ci a {})"
+
+#: crates/suite-ui/src/words.rs:34
+msgid "Needs glibc {} or later, which wasn't found"
+msgstr "Nécessite glibc {} ou plus récent, introuvable ici"
+
+#: crates/suite-ui/src/words.rs:35
+msgid "Needs macOS {} or later (this Mac has {})"
+msgstr "Nécessite macOS {} ou plus récent (ce Mac a {})"
+
+#: crates/suite-ui/src/words.rs:36
+msgid "Needs macOS {} or later"
+msgstr "Nécessite macOS {} ou plus récent"
+
+#: crates/suite-ui/src/words.rs:38
+msgid "Needs Windows build {} or later (this PC has {})"
+msgstr "Nécessite Windows build {} ou plus récent (ce PC a {})"
+
+#: crates/suite-ui/src/words.rs:40
+msgid "Needs Windows build {} or later"
+msgstr "Nécessite Windows build {} ou plus récent"
+
+#: crates/suite-ui/src/words.rs:42
+msgid "Comes as a {} package, which Stockroom can't install here yet"
+msgstr "Fournie en paquet {}, que Stockroom ne peut pas encore installer ici"
+
+#: crates/suite-ui/src/words.rs:44
+msgid "Needs Flatpak, which isn't installed"
+msgstr "Nécessite Flatpak, qui n’est pas installé"
+
+#: crates/suite-ui/src/words.rs:46
+msgid ""
+"Lists a requirement this version of Stockroom doesn't know ({}); update "
+"Stockroom"
+msgstr ""
+"Indique une exigence que cette version de Stockroom ne connaît pas ({}) ; "
+"mettez Stockroom à jour"
+
+#: crates/suite-ui/src/words.rs:66
+msgid "Installed separately (found on your PATH)"
+msgstr "Installée séparément (trouvée dans votre PATH)"
+
+#: crates/suite-ui/src/words.rs:67
+msgid "Installed by your system's package manager"
+msgstr "Installée par le gestionnaire de paquets de votre système"
+
+#: crates/suite-ui/src/words.rs:68
+msgid "Installed by Flatpak"
+msgstr "Installée par Flatpak"
+
+#: crates/suite-ui/src/words.rs:69
+msgid "Installed in Applications"
+msgstr "Installée dans Applications"
+
+#: crates/suite-ui/src/words.rs:70
+msgid "Installed by the App Store"
+msgstr "Installée par l’App Store"
+
+#: crates/suite-ui/src/words.rs:71
+msgid "Installed by the Microsoft Store"
+msgstr "Installée par le Microsoft Store"
+
+#: crates/suite-ui/src/words.rs:72
+msgid "Installed by Homebrew"
+msgstr "Installée par Homebrew"
+
+#: crates/suite-ui/src/words.rs:73
+msgid "Installed by its own installer"
+msgstr "Installée par son propre programme d’installation"
+
+#: crates/suite-ui/src/words.rs:74
+msgid "Installed by winget"
+msgstr "Installée par winget"
+
+#: crates/suite-ui/src/words.rs:80
+msgid "Microsoft Store"
+msgstr "Microsoft Store"
+
+#: crates/suite-ui/src/words.rs:81
+msgid "App Store"
+msgstr "App Store"
+
+#: crates/suite-ui/src/words.rs:82
+msgid "website"
+msgstr "site web"
+
+#: crates/suite-ui/src/words.rs:89
+msgid "From its website"
+msgstr "Depuis son site web"
+
+#: crates/suite-ui/src/words.rs:90
+msgid "From the {}"
+msgstr "Via {}"
+
+#: crates/suite-ui/src/words.rs:97
+msgid "Opened the {} website"
+msgstr "Site web de {} ouvert"
+
+#: crates/suite-ui/src/words.rs:98
+msgid "Opened {} in the {}"
+msgstr "{} ouvert via {}"
+
+#: crates/suite-ui/src/words.rs:105
+msgid "Its website has the steps to install it."
+msgstr "Son site web indique comment l'installer."
+
+#: crates/suite-ui/src/words.rs:106
+msgid ""
+"The store takes it from here: it installs the app and keeps it up to date."
+msgstr "La boutique prend le relais : elle installe l’app et la tient à jour."
+
+#: crates/suite-ui/src/words.rs:114
+msgid ""
+"Get it from the Microsoft Store. The store installs it and keeps it up to "
+"date."
+msgstr ""
+"Obtenez-la sur le Microsoft Store. La boutique l’installe et la tient à jour."
+
+#: crates/suite-ui/src/words.rs:117
+msgid ""
+"Get it from the App Store. The store installs it and keeps it up to date."
+msgstr "Obtenez-la sur l’App Store. La boutique l’installe et la tient à jour."
+
+#: crates/suite-ui/src/words.rs:119
+msgid "Get it from its website, which has the steps to install it."
+msgstr "Téléchargez-la sur son site web, qui indique comment l'installer."
+
+#: crates/suite-ui/src/words.rs:125
+msgid "Downloading"
+msgstr "Téléchargement"
+
+#: crates/suite-ui/src/words.rs:126
+msgid "Unpacking"
+msgstr "Décompression"
+
+#: crates/suite-ui/src/words.rs:127
+msgid "Switching to the new version"
+msgstr "Passage à la nouvelle version"
+
+#: crates/suite-ui/src/words.rs:128
+msgid "Adding shortcuts"
+msgstr "Ajout des raccourcis"
+
+#: crates/suite-ui/src/words.rs:129
+msgid "Tidying up"
+msgstr "Nettoyage"
+
+#: crates/suite-ui/src/words.rs:135
+msgid "a systemd user timer"
+msgstr "un minuteur utilisateur systemd"
+
+#: crates/suite-ui/src/words.rs:136
+msgid "an autostart entry"
+msgstr "une entrée de démarrage automatique"
+
+#: crates/suite-ui/src/words.rs:137
+msgid "a LaunchAgent"
+msgstr "un LaunchAgent"
+
+#: crates/suite-ui/src/words.rs:138
+msgid "Task Scheduler"
+msgstr "le Planificateur de tâches"
+
+#: crates/suite-ui/src/words.rs:145
+msgid "Another install or update is running. Try again in a moment."
+msgstr ""
+"Une autre installation ou mise à jour est en cours. Réessayez dans un "
+"instant."
+
+#: crates/suite-ui/src/words.rs:146
+msgid "{} is open. Close it, then try again."
+msgstr "{} est ouvert. Fermez-le, puis réessayez."
+
+#: crates/suite-ui/src/words.rs:147
+msgid ""
+"{} released a new build that the app list doesn't know yet, so nothing was "
+"changed. It works again once the list is refreshed."
+msgstr ""
+"{} a publié une nouvelle build que la liste des apps ne connaît pas encore, "
+"donc rien n’a été modifié. Cela refonctionnera une fois la liste actualisée."
+
+#: crates/suite-ui/src/words.rs:152
+msgid ""
+"The download server couldn't be reached. Check your connection and try again."
+msgstr ""
+"Le serveur de téléchargement est injoignable. Vérifiez votre connexion et "
+"réessayez."
+
+#: crates/suite-ui/src/words.rs:155
+msgid ""
+"The download didn't match what the app list promised, so nothing was "
+"installed."
+msgstr ""
+"Le téléchargement ne correspondait pas à ce que promettait la liste des "
+"apps, donc rien n’a été installé."
+
+#: crates/suite-ui/src/words.rs:157
+msgid "The app list couldn't be checked, so nothing was changed."
+msgstr "La liste des apps n’a pas pu être vérifiée, donc rien n’a été modifié."
+
+#: crates/suite-ui/src/words.rs:158
+msgid "{} can't be installed on this computer."
+msgstr "{} ne peut pas être installé sur cet ordinateur."
+
+#: crates/suite-ui/src/words.rs:159
+msgid "There's no earlier version of {} to go back to."
+msgstr "Il n’y a pas de version antérieure de {} à laquelle revenir."
+
+#: crates/suite-ui/src/words.rs:160
+msgid "Files couldn't be written. Check that the disk has free space."
+msgstr ""
+"Impossible d’écrire les fichiers. Vérifiez qu’il reste de la place sur le "
+"disque."
+
+#: crates/suite-ui/src/words.rs:161
+msgid "Something went wrong with {}."
+msgstr "Un problème est survenu avec {}."
+
+#: crates/suite-ui/src/words.rs:170
+msgid ""
+"The app list couldn't be downloaded. Check your connection, then try again."
+msgstr ""
+"La liste des apps n’a pas pu être téléchargée. Vérifiez votre connexion, "
+"puis réessayez."
+
+#: crates/suite-ui/src/words.rs:172
+msgid "The newest app list couldn't be checked. Showing the last known list."
+msgstr ""
+"La liste des apps la plus récente n’a pas pu être vérifiée. Affichage de la "
+"dernière liste connue."
+
+#: crates/suite-ui/src/words.rs:173
+msgid ""
+"The app list couldn't be checked, so nothing can be installed right now."
+msgstr ""
+"La liste des apps n’a pas pu être vérifiée, donc rien ne peut être installé "
+"pour l’instant."
+
+#~ msgid ""
+#~ "Couldn't check for new versions: the server can't be reached. Showing the "
+#~ "last known list."
+#~ msgstr ""
+#~ "Impossible de rechercher de nouvelles versions : le serveur est "
+#~ "injoignable. Affichage de la dernière liste connue."
+
+#~ msgid "DETAILS"
+#~ msgstr "DÉTAILS"

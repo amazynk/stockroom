@@ -1,0 +1,40 @@
+[package]
+name = "suite-cli"
+description = "The `stockroom` binary: command line, background mode, and the entry to the app window"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "stockroom"
+path = "src/main.rs"
+
+[dependencies]
+suite-catalog.workspace = true
+suite-core.workspace = true
+suite-fetch.workspace = true
+suite-identity.workspace = true
+suite-install.workspace = true
+suite-platform.workspace = true
+suite-ui.workspace = true
+clap.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+# The Windows resources of stockroom.exe (build.rs).
+[build-dependencies]
+embed-resource.workspace = true
+suite-identity.workspace = true
+
+[features]
+default = ["gpu"]
+# GPU drawing in the window (see suite-ui); `--no-default-features` builds a software-only Stockroom.
+gpu = ["suite-ui/gpu"]
+
+[dev-dependencies]
+suite-testkit.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

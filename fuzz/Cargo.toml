@@ -1,0 +1,40 @@
+[package]
+name = "suite-fuzz"
+version = "0.0.0"
+edition = "2024"
+license = "GPL-3.0-or-later"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+# Deliberately outside the main workspace: these targets need nightly sanitizer builds
+# and libFuzzer, which `cargo test --workspace` must not.
+[workspace]
+
+[dependencies]
+libfuzzer-sys = "=0.4.13"
+suite-catalog = { path = "../crates/suite-catalog" }
+suite-unpack = { path = "../crates/suite-unpack" }
+tempfile = "3.27.0"
+
+[[bin]]
+name = "catalog_json"
+path = "fuzz_targets/catalog_json.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "tar"
+path = "fuzz_targets/tar.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "zip"
+path = "fuzz_targets/zip.rs"
+test = false
+doc = false
+bench = false

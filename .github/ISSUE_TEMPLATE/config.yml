@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Chat on Discord
+    url: https://amazynk.com/discord/
+    about: Talk with other users and the developers.
+  - name: Report a security problem
+    url: https://github.com/amazynk/stockroom/security/advisories/new
+    about: Please report vulnerabilities privately.
+  - name: What Stockroom is
+    url: https://amazynk.com/stockroom/
+    about: The site, with what it installs and how.

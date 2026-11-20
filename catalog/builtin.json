@@ -1,0 +1,371 @@
+{
+  "schema": 1,
+  "version": 1795189505,
+  "published": "2026-11-20T15:45:05Z",
+  "apps": [
+    {
+      "id": "specular",
+      "part": "AMZ-01",
+      "name": "Specular",
+      "pitch": "Open and flip through large photos instantly",
+      "description": "A fast image viewer for photos, raw files, scientific and design formats. It opens huge images instantly and flips through folders without waiting.",
+      "icon": {
+        "url": "https://amazynk.com/stockroom/icons/specular-23847738bc36.png",
+        "sha256": "23847738bc36348935b0ab912f5ef7da43518947da238fcc48df62920abb5312"
+      },
+      "homepage": "https://amazynk.com/specular",
+      "license": "MIT OR Apache-2.0",
+      "category": "Graphics",
+      "status": "available",
+      "ids": {
+        "desktop": "app.specular.Specular",
+        "flatpak": "app.specular.Specular",
+        "macos_bundle": "app.specular.Specular",
+        "windows_uninstall_key": "Specular",
+        "executables": [
+          "specular"
+        ]
+      },
+      "data_paths": {},
+      "releases": [
+        {
+          "version": "0.1.3",
+          "channel": "stable",
+          "date": "2026-11-20T15:07:10Z",
+          "notes_url": "https://github.com/amazynk/specular/releases/tag/v0.1.3",
+          "assets": [
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "tar.gz",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.3/specular-0.1.3-linux-x86_64.tar.gz",
+              "size": 63986651,
+              "sha256": "b31337494cf42a3e363202cd7e9e400833600f68835e4f40f1c2a56243001ca1",
+              "requires": {
+                "x86_64_v3": true,
+                "glibc": "2.35"
+              },
+              "layout": {
+                "executable": "specular",
+                "icon": "share/icons/hicolor/scalable/apps/app.specular.Specular.svg",
+                "desktop": "share/applications/app.specular.Specular.desktop"
+              }
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "appimage",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.3/Specular-0.1.3-x86_64.AppImage",
+              "size": 60475896,
+              "sha256": "445d30bb020f452fc74f051b3efa627c386355bb4013d19314c10672f9fbcdcd",
+              "requires": {
+                "x86_64_v3": true,
+                "glibc": "2.35"
+              }
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "flatpak-bundle",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.3/Specular-0.1.3-x86_64.flatpak",
+              "size": 44896816,
+              "sha256": "8d8310bc8810f9e6e6e4a98b05f228c76e1e58d77e4ecab4764323f56f713e09",
+              "requires": {
+                "x86_64_v3": true
+              }
+            },
+            {
+              "os": "windows",
+              "arch": "x86_64",
+              "kind": "zip",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.3/Specular-0.1.3-windows-x64.zip",
+              "size": 65225135,
+              "sha256": "7b2b357ec7d81105ce4964c4bb0cd83ebf37e9bc951ba3d0120b70ee01db8f84",
+              "requires": {
+                "x86_64_v3": true
+              },
+              "layout": {
+                "executable": "specular.exe"
+              }
+            },
+            {
+              "os": "windows",
+              "arch": "x86_64",
+              "kind": "msi",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.3/Specular-0.1.3-x64.msi",
+              "size": 53928446,
+              "sha256": "e020a26f57614f543b33db5af8c79ed39539f961a83ea54267a991b21e4ea959",
+              "requires": {
+                "x86_64_v3": true
+              }
+            },
+            {
+              "os": "macos",
+              "arch": "universal",
+              "kind": "dmg",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.3/Specular-0.1.3-universal.dmg",
+              "size": 134611420,
+              "sha256": "30cd727ded5bfbd4f02e1456b2df21b1e50877ed34066ec00715d52afbebc9b5",
+              "layout": {
+                "executable": "Specular.app"
+              }
+            }
+          ]
+        },
+        {
+          "version": "0.1.2",
+          "channel": "stable",
+          "date": "2026-11-16T20:33:18Z",
+          "notes_url": "https://github.com/amazynk/specular/releases/tag/v0.1.2",
+          "assets": [
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "tar.gz",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.2/specular-0.1.2-linux-x86_64.tar.gz",
+              "size": 64001075,
+              "sha256": "5b200fd6468b5bdfcc9f8649b14740aa32610cb01e16a6b069c1e128b7580147",
+              "requires": {
+                "x86_64_v3": true,
+                "glibc": "2.35"
+              },
+              "layout": {
+                "executable": "specular",
+                "icon": "share/icons/hicolor/scalable/apps/app.specular.Specular.svg",
+                "desktop": "share/applications/app.specular.Specular.desktop"
+              }
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "appimage",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.2/Specular-0.1.2-x86_64.AppImage",
+              "size": 60500472,
+              "sha256": "bd300744409316431200a3fede96eac3463197b47a2b7a9ba60fad9974955b75",
+              "requires": {
+                "x86_64_v3": true,
+                "glibc": "2.35"
+              }
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "flatpak-bundle",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.2/Specular-0.1.2-x86_64.flatpak",
+              "size": 44902464,
+              "sha256": "48ebb093db0dac731ed52ede1695908bac8bb23a056af7727388bf28dc541cfe",
+              "requires": {
+                "x86_64_v3": true
+              }
+            },
+            {
+              "os": "windows",
+              "arch": "x86_64",
+              "kind": "zip",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.2/Specular-0.1.2-windows-x64.zip",
+              "size": 65229973,
+              "sha256": "5b9be30bcae31d860442a9453c2807ee2a925468deaf0deedaa49235f0cf9923",
+              "requires": {
+                "x86_64_v3": true
+              },
+              "layout": {
+                "executable": "specular.exe"
+              }
+            },
+            {
+              "os": "windows",
+              "arch": "x86_64",
+              "kind": "msi",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.2/Specular-0.1.2-x64.msi",
+              "size": 53924350,
+              "sha256": "9a11010d01c93276c145e89f011a16669e0937e9e07fa68f4ccd12ee9daf85af",
+              "requires": {
+                "x86_64_v3": true
+              }
+            },
+            {
+              "os": "macos",
+              "arch": "universal",
+              "kind": "dmg",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.2/Specular-0.1.2-universal.dmg",
+              "size": 134606421,
+              "sha256": "23f07432285dc4bb5eacc997727befb6cd79e12b8ba81b42dc3596aa64a2605b",
+              "layout": {
+                "executable": "Specular.app"
+              }
+            }
+          ]
+        },
+        {
+          "version": "0.1.1",
+          "channel": "stable",
+          "date": "2026-11-13T20:59:33Z",
+          "notes_url": "https://github.com/amazynk/specular/releases/tag/v0.1.1",
+          "assets": [
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "tar.gz",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.1/specular-0.1.1-linux-x86_64.tar.gz",
+              "size": 63975529,
+              "sha256": "973d4dd3c1f40197ae576f489239da1747df9a75858750bd9c55bd78f329210d",
+              "requires": {
+                "x86_64_v3": true,
+                "glibc": "2.35"
+              },
+              "layout": {
+                "executable": "specular",
+                "icon": "share/icons/hicolor/scalable/apps/app.specular.Specular.svg",
+                "desktop": "share/applications/app.specular.Specular.desktop"
+              }
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "appimage",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.1/Specular-0.1.1-x86_64.AppImage",
+              "size": 60463608,
+              "sha256": "0fbdbfef2ab82a8a122b0b36f555a3ac7bd18d675727565005d389fb2382d375",
+              "requires": {
+                "x86_64_v3": true,
+                "glibc": "2.35"
+              }
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "flatpak-bundle",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.1/Specular-0.1.1-x86_64.flatpak",
+              "size": 44875088,
+              "sha256": "c4d17b1398cf3a3b9dd335e144cda17829bd7a55dcdb932c3012f9a4d28f2436",
+              "requires": {
+                "x86_64_v3": true
+              }
+            },
+            {
+              "os": "windows",
+              "arch": "x86_64",
+              "kind": "zip",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.1/Specular-0.1.1-windows-x64.zip",
+              "size": 65195258,
+              "sha256": "6ac49b43fb29849e9b8169bec431ccaaf58e92982f80691568242ca3c7d00c83",
+              "requires": {
+                "x86_64_v3": true
+              },
+              "layout": {
+                "executable": "specular.exe"
+              }
+            },
+            {
+              "os": "windows",
+              "arch": "x86_64",
+              "kind": "msi",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.1/Specular-0.1.1-x64.msi",
+              "size": 53907966,
+              "sha256": "44fac6b3a9cd06c4cb1236f15ff8fb745ea8e764ae9c4151053220e8f17469cd",
+              "requires": {
+                "x86_64_v3": true
+              }
+            },
+            {
+              "os": "macos",
+              "arch": "universal",
+              "kind": "dmg",
+              "url": "https://github.com/amazynk/specular/releases/download/v0.1.1/Specular-0.1.1-universal.dmg",
+              "size": 134533440,
+              "sha256": "533558cd8b3404e51afd00b72fb97981f192a2d84285fb0827d22f80f338d61e",
+              "layout": {
+                "executable": "Specular.app"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dozed",
+      "part": "AMZ-02",
+      "name": "Dozed",
+      "pitch": "Freeze background apps so they stop waking the CPU",
+      "description": "Freezes backgrounded desktop applications so they stop waking the CPU, and thaws them the instant you switch back. Free and open source, for Linux. Unprivileged, and dry-run by default.",
+      "icon": {
+        "url": "https://amazynk.com/stockroom/icons/dozed-4f6e16e33bb6.png",
+        "sha256": "4f6e16e33bb66ba02fc62eb18c49240e58d28edc89a514f9afd278dd3b72d2a5"
+      },
+      "homepage": "https://amazynk.com/dozed/",
+      "license": "MIT",
+      "category": "System",
+      "status": "available",
+      "ids": {
+        "desktop": "dozed-gui",
+        "executables": [
+          "dozed"
+        ]
+      },
+      "data_paths": {},
+      "releases": [
+        {
+          "version": "0.1.0",
+          "channel": "stable",
+          "date": "2026-11-17T11:33:44Z",
+          "notes_url": "https://github.com/amazynk/dozed/releases/tag/v0.1.0",
+          "assets": [
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "kind": "store",
+              "url": "https://amazynk.com/dozed/",
+              "size": 0,
+              "store": {
+                "store": "website",
+                "product_id": "dozed",
+                "url": "https://amazynk.com/dozed/",
+                "link": "https://amazynk.com/dozed/#install"
+              },
+              "note": "Installed from its website"
+            },
+            {
+              "os": "linux",
+              "arch": "aarch64",
+              "kind": "store",
+              "url": "https://amazynk.com/dozed/",
+              "size": 0,
+              "store": {
+                "store": "website",
+                "product_id": "dozed",
+                "url": "https://amazynk.com/dozed/",
+                "link": "https://amazynk.com/dozed/#install"
+              },
+              "note": "Installed from its website"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pagebara",
+      "part": "AMZ-03",
+      "name": "Pagebara",
+      "pitch": "Fast, private PDF viewer and editor",
+      "description": "Read, search, annotate, fill in, sign, redact and reorganise PDF files, on its own engine in safe Rust. Your documents stay on your device: no account, no cloud, no telemetry.",
+      "icon": {
+        "url": "https://amazynk.com/stockroom/icons/pagebara-24840ed6df5e.png",
+        "sha256": "24840ed6df5ee6cc5790558db44bbed019f18efd33a6ac442e772456674582dd"
+      },
+      "homepage": "https://amazynk.com/pagebara/",
+      "license": "MIT OR Apache-2.0",
+      "category": "Office",
+      "status": "unreleased",
+      "ids": {
+        "desktop": "com.amazynk.Pagebara",
+        "flatpak": "com.amazynk.Pagebara",
+        "macos_bundle": "com.amazynk.Pagebara",
+        "executables": [
+          "pagebara"
+        ]
+      },
+      "data_paths": {},
+      "releases": []
+    }
+  ]
+}

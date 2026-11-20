@@ -1,0 +1,28 @@
+[package]
+name = "suite-core"
+description = "Orchestration: catalog loading and trust, the job queue with progress events, update policies, background runs and doctor"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+suite-catalog.workspace = true
+suite-detect.workspace = true
+suite-fetch.workspace = true
+suite-identity.workspace = true
+suite-install.workspace = true
+suite-platform.workspace = true
+suite-unpack.workspace = true
+sha2.workspace = true
+semver.workspace = true
+thiserror.workspace = true
+time.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+suite-testkit.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

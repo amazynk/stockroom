@@ -1,0 +1,17 @@
+[package]
+name = "suite-shim"
+description = "The Windows launcher shim: starts the current version of an app Stockroom installed"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+# Only the standard library: the shim is copied next to every installed app, so it stays
+# a few hundred kilobytes and has nothing to update.
+[dependencies]
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true
